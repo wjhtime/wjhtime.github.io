@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[随机红包算法]]></title>
+    <url>%2F2018%2F08%2F30%2Fshuffle_red_package%2F</url>
+    <content type="text"><![CDATA[每次生成红包，金额随机，不太大，也不会太小，红包总金额不会超出限额。 1234567891011121314151617181920212223242526272829303132333435363738394041class MoneyPackage &#123; public $leftMoney; public $leftSize; public function __construct($leftMoney, $leftSize) &#123; $this-&gt;leftMoney = $leftMoney * 100; $this-&gt;leftSize = $leftSize; &#125;&#125;function getRandomMoney(MoneyPackage $package) &#123; if ($package-&gt;leftSize &lt;= 0 || $package-&gt;leftMoney &lt;= 0) &#123; return '超出限额'; &#125; if ($package-&gt;leftSize == 1) &#123; $package-&gt;leftSize--; $money = $package-&gt;leftMoney; $package-&gt;leftMoney = 0; return $money/100; &#125; $min = 1; $max = $package-&gt;leftMoney / $package-&gt;leftSize * 2; $rand = mt_rand()/mt_getrandmax(); $money = floor($rand * $max); $money = $money &gt;= $min ? $money : 1; $package-&gt;leftSize--; $package-&gt;leftMoney -= $money; return $money/100;&#125;$n = 10;$r = [];$package = new MoneyPackage(10, $n);for ($i=0; $i&lt;$n; $i++) &#123; $r[] = getRandomMoney($package);&#125;print_r($r);print_r(array_sum($r)); 不预先生成所有的红包，每次实时计算红包金额 红包算法： 12红包金额=当前余额/剩余个数*2*(0-1之间随机数)如果所得金额小于0.01，则将金额置为0.01]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[swoole扩展安装]]></title>
+    <url>%2F2018%2F08%2F13%2Fswoole_install%2F</url>
+    <content type="text"><![CDATA[github上下载swoole的release包 1234567891011121314151617181920212223241. tar -zxvf swoole-src-4.0.3.tar.gz解压包2. cd swoole-src-4.0.3进入目录3. phpize生成编译检测脚本4. ./configure --with-php-config=/usr/bin/php-config编译配置检测5. make编译6. make install安装，之后会打印扩展位置Installing shared extensions: /usr/local/Cellar/php@7.0/7.0.29_1/pecl/20151012/Installing header files: /usr/local/Cellar/php@7.0/7.0.29_1/include/php/7. 修改php.ini，也可以在conf.d目录下创建扩展文件[swoole]extension="/usr/local/Cellar/php@7.0/7.0.29_1/pecl/20151012/swoole.so" 相关工具： 123phpize 编译安装扩展工具 php-config 获取php的配置信息]]></content>
+      <categories>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>php</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[打印符合规则的数组的值]]></title>
+    <url>%2F2018%2F07%2F29%2Fprint_array_value%2F</url>
+    <content type="text"><![CDATA[遍历数组里的值，如果两数之和等于key，则打印这两个数，并且这两个值只能用一次 12345678910111213141516171819$arr = range(-100, 100);$key = 2;function check($arr, $key) &#123; $count = count($arr); for ($i=0; $i&lt;$count; $i++)&#123; for($j=$i+1; $j&lt;$count; $j++)&#123; if ($arr[$i] + $arr[$j] == $key) &#123; print $arr[$i]. ', '. $arr[$j]. "\n"; $arr[$i] = null; $arr[$j] = null; break; &#125; &#125; &#125;&#125;check($arr, $key); 本来用的unset删掉数组的键值，后来发现这种方法不清晰，只会给自己挖坑，所以，改用$arr[$i] = null的方式。]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[括号匹配问题]]></title>
+    <url>%2F2018%2F07%2F25%2Fbrackets_match%2F</url>
+    <content type="text"><![CDATA[验证括号是否匹配 {1+2}+[(3+4)*5]*6-1 ，这种类型的字符串，括号必须成对出现，否则不符合要求 实现12345678910111213141516171819202122232425$str = "&#123;1+2&#125;+[(3+4)*5]*6-1";$search = "[]()&#123;&#125;";function check_match($str, $search)&#123; $result = []; $length = strlen($str); for ($i=0; $i&lt;$length; $i++)&#123; if (strstr($search, $str[$i]))&#123; $tmp = array_pop($result); if ($tmp)&#123; $pos = strpos($search, $tmp); if ($search[$pos+1] == $str[$i]) &#123; continue; &#125; array_push($result, $tmp); &#125; array_push($result, $str[$i]); &#125; &#125; if (count($result)&gt;0) return false; return true;&#125;$result = check_match($str, $search);var_dump($result);]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[docker实现mysql主从复制]]></title>
+    <url>%2F2018%2F05%2F10%2Fdocker_mysql%2F</url>
+    <content type="text"><![CDATA[linux环境下docker实现mysql主从服务器 思路启动2个mysql服务器，mysql_master主服务器，mysql_slave从服务器，并实现主从复制功能 另外docker实现的nginx负载均衡在此 nginx负载均衡 目录说明1234567/root/docker/mysql/conf.d/master.cnf 主机master配置文件/etc/mysql/conf.d/master.cnf master容器的配置文件/root/docker/mysql/master-data 主机master数据文件/var/lib/mysql 容器中mysql数据文件/root/docker/mysql/conf.d/slave.cnf 主机中slave从服务器配置文件/etc/mysql/conf.d/slave.cnf slave容器中配置文件/root/docker/mysql/slave-data slave容器中的数据文件 步骤1.启动mysql_master主服务器 12345678# 拉取mysql镜像docker pull mysql:5.7# 启动容器，并配置密码为rootdocker run --name mysql_master -d -p 3307:3306 \-v /root/docker/mysql/conf.d/master.cnf:/etc/mysql/conf.d/master.cnf \-v /root/docker/mysql/master-data:/var/lib/mysql \-e MYSQL_ROOT_PASSWORD=root mysql:5.7 2.启动mysql_slave从服务器 1234docker run --name mysql_slave -d -p 3308:3306 \-v /root/docker/mysql/conf.d/slave.cnf:/etc/mysql/conf.d/slave.cnf \-v /root/docker/mysql/slave-data:/var/lib/mysql \-e MYSQL_ROOT_PASSWORD=root --link mysql_master:mysql_master mysql:5.7 3.创建backup用户，并授权同步 1grant replication slave on *.* to &apos;backup&apos;@&apos;%&apos; indentified by &apos;111111&apos;; 查看主服务器的状态，记录pos等数据 1show master status; 4.从服务器中执行 1change master to master_host=&apos;mysql_master&apos;,master_user=&apos;backup&apos;,master_password=&apos;111111&apos;,master_file_log=&apos;mysql_bin.000003&apos;,master_log_pos=439,master_port=3306; 123456# 查看各自的状态show slave status;show master status;# 启动主从复制start slave; mysql_master.cnf配置 12345678910111213141516[mysqldump]user=rootpassword=&apos;root&apos;[mysqld]max_allowed_packet=8Mlower_case_table_names=1character_set_server=utf8max_connections=900max_connect_errors=600# 比较重要，主服务器的id是1server_id=1log-bin=mysql-binslow_query_log=1long_query_time=1log_error mysql_slave.cnf配置 12345678910111213141516[mysqldump]user=rootpassword=&apos;root&apos;[mysqld]max_allowed_packet=8Mlower_case_table_names=1character_set_server=utf8max_connections=900max_connect_errors=600# 比较重要，从服务器的id是2server_id=2log-bin=mysql-binslow_query_log=1long_query_time=1log_error 两个的log-bin配置均采用mysql-bin的方式 5.后续增加从服务器 1234567891011121314# master服务器flush tables with read lock;# 记录日志点show master status;# 导出mysql_dump -R uroot -p database &gt; /tmp/database.sqlunlock tables;从服务器的配置方法同上创建一个server_id=3的配置文件，一个数据挂载目录source /tmp/database.sqlchange master to ...]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[docker实现nginx负载均衡]]></title>
+    <url>%2F2018%2F05%2F10%2Fdocker_nginx%2F</url>
+    <content type="text"><![CDATA[linux环境下docker实现nginx负载均衡环境搭建 思路启动1个php容器，处理php请求 启动3个nginx容器，nginx1，nginx2，nginx_main，1和2是应用服务器，main是反向代理服务器 所有对nginx_main的请求都会分布到nginx1和nginx2上面 最后通过观察nginx1，2的访问日志可以看到效果 目录说明1234567/var/www/html/laravel 主机的网站地址/usr/share/nginx/html 容器内的网站地址/root/docker/nginx/conf.d 主机的nginx配置目录/etc/nginx/conf.d 容器内的nginx配置目录/root/docker/nginx/nginx.conf 主机的nginx配置文件/etc/nginx/nginx.conf 容器内的nginx配置文件/root/docker/nginx/nginx_main.conf 主机的nginx代理服务器配置文件 步骤1.启动php服务器 123456789# 拉取镜像docker pull php:7.0-fpm# 启动容器docker run --name php -d -p 9001:9000 \-v /var/www/html/laravel:/usr/share/nginx/html php:7.0-fpm#安装pdo_mysql扩展docker-php-ext-install pdo_mysql 2.启动nginx1，2，关联php容器 1234567891011121314# 拉取nginx镜像docker pull nginx# 启动nginx1容器docker run --name nginx1 -d -p 81:80 \-v /root/docker/nginx/conf.d:/etc/nginx/conf.d \-v /root/docker/nginx/nginx.conf:/etc/nginx/nginx.conf \-v /var/www/html/laravel:/usr/share/nginx/html --link php:php nginx# 启动nginx2容器docker run --name nginx2 -d -p 82:80 \-v /root/docker/nginx/conf.d:/etc/nginx/conf.d \-v /root/docker/nginx/nginx.conf:/etc/nginx/nginx.conf \-v /var/www/html/laravel:/usr/share/nginx/html --link php:php nginx nginx.conf配置 1234567891011121314151617181920user nginx;worker_processes 1;error_log /var/log/nginx/error.log warn;pid /var/run/nginx.pid;events &#123; worker_connections 1024;&#125;http &#123; include /etc/nginx/mime.types; default_type application/octet-stream; log_format main '$remote_addr - $remote_user [$time_local] "$request" ' '$status $body_bytes_sent "$http_referer"' '"$http_user_agent" "$http_x_forwarded_for"' access_log /var/log/nginx/access.log main; sendfile on; keepalive_timeout 65; include /etc/nginx/conf.d/*.conf;&#125; default.conf配置 123456789101112131415161718192021222324server &#123; listen 80; server_name localhost; root /usr/share/nginx/html/public; index index.php index.html index.htm; location ~* \.(gif|jpg|png|css|js|flv|swf|ico|woff|ttf|woff2)(.*)$ &#123; access_log off; expires 30d; &#125; location / &#123; try_files $uri $uri/ /index.php$is_args$args; # 连接php容器的9000端口 fastcgi_pass php:9000; fastcgi_index index.php; fastcgi_buffers 16 16k; fastcgi_buffer_size 32k; fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name; fastcgi_read_timeout 600; include fastcgi_params; &#125;&#125;# fastcgi_pass里的php为php容器 3.启动nginx_main反向代理服务器，关联nginx1和nginx2 12docker run --name nginx_main -d -p 83:80 \-v /root/docker/nginx/nginx_main.conf:/etc/nginx/nginx.conf --link nginx1:nginx1 --link nginx2:nginx2 nginx nginx_main反向代理服务器配置 1234567891011121314151617181920212223242526272829303132333435363738394041user nginx;worker_processes auto;error_log /var/log/nginx/error.log;pid /run/nginx.pid;# include /usr/share/nginx/modules/*.conf;event &#123; worker_connections 1024;&#125;http &#123; # 反向代理配置，nginx1的权重是2，nginx2的权重是3 upstream php-fpm &#123; server nginx1 weight=2; server nginx2 weight=3; &#125; log_format main '$remote_addr - $remote_user [$time_local] "$request" ' '$status $body_bytes_sent "$http_referer" ' '"$http_user_agent" "$http_x_forwarded_for"'; access_log /var/log/nginx/access.log main; sendfile on; tcp_nopush on; tcp_nodelay on; keepalive_timeout 65; types_hash_max_size 2048; include /etc/nginx/mime.types; default_type application/octet-stream; server &#123; listen 80; server_name localhost; root /usr/share/nginx/html; location / &#123; # 此处的php-fpm为上面upstream模块配置的php-fpm proxy_pass http://php-fpm; &#125; &#125;&#125;# proxy_pass的php-fpm必须加上http://，否则报错]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[kibana使用技巧]]></title>
+    <url>%2F2018%2F03%2F23%2Fkibana%2F</url>
+    <content type="text"><![CDATA[kibana搜索规则&quot;key word&quot;关键词搜索，加上引号可以查询整个短语 status:504按关键词搜索，查找结果中包含504的数据 ?匹配单个字符* 匹配多个字符 ANDOR逻辑操作，必须大写 + 结果中必须有- 结果中去掉 统计nginx访问日志 状态码是200，不是资源类型的请求 1status:200 AND NOT request:png AND NOT request:gif AND NOT request:jpg AND NOT request:ico AND NOT request:css AND NOT request:js]]></content>
+      <categories>
+        <category>学习笔记</category>
+      </categories>
+  </entry>
+  <entry>
+    <title><![CDATA[vi简单使用]]></title>
+    <url>%2F2018%2F03%2F07%2Fvi%2F</url>
+    <content type="text"><![CDATA[强大的linux编辑器，分为命令模式和编辑模式，从编辑模式切换到命令模式使用esc键，从命令模式切换到编辑模式使用a A o O i I键 参考资料：https://coolshell.cn/articles/5426.html 行内移动123456w 移到下一个单词头e 移到下一个单词尾^ 移到非空行首g_ 移到非空行尾fa 找当前行的at; 调到;前的字符 全文移动12345678* 搜索当前的字符串# 搜索当前的字符串% 查找相匹配的括号ctrl+u 向前翻半页ctrl+d 向后翻半页 保存12:saveas /path/to/file另存为 插入字符123456a 当前字符后插入A 行尾插入o 在下一行插入空行O 在前一行插入空行i 当前字符前插入I 行首插入 删除123D 删除当前行，当前位置之后的内容cw 删除光标所在位置到单词结尾的字符dt; 一直删除到;截止 粘贴12p 在之后粘贴P 在之前粘贴 替换12r 单个字符R 当前行字符 撤销回退1ctrl+r 回退 选择123456&lt;action&gt;&lt;object&gt;action: d y vve选择当前单词，同理ye粘贴当前单词，de删除当前单词 代码提示123在编辑模式下ctrl+pctrl+n 批量注释1231. ctrl + v //块选择2. shift + i //插入#3. 按esc键(两次) 自动缩进1== 高级用法打开缓存文件123456命令模式:ls列出打开过的文件%表示当前打开的文件:buffer 2选择要打开那个缓存文件 标签浏览文件123456789101112:Te 按标签浏览文件gt 移到下一个标签文件gT 移到前一个标签文件:tabs 列出所有标签:tabfirst:tablast打开指定的标签文件:qa 退出所有标签 分屏浏览12345678910111213141516:He 上下分屏:Ve 左右分屏:split:vsplit分屏，打开相同的文件ctrl+w+h/j/k/l切换分屏:set scb 在各个分屏内输入分屏同步移动:set scb!解锁同步移动 多文件12345:e /path/to/file文件移动:bn:bp 保存会话12345:mksession保存会话vi -S Session.vim恢复会话 大小写转换12345678选定字符 + u转换为小写选定字符 + U转换为大写gu 当前行转换为小写gU 当前行转换为大写 光标移动12ctrl + o 回退光标ctrl + i 前进光标 运行命令并插入到vi中12:r!date :r!ls]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>vi</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[将字符串和数字分组]]></title>
+    <url>%2F2018%2F02%2F04%2Fsplit_numbers_and_alphabet%2F</url>
+    <content type="text"><![CDATA[分组格式化字符串1a3bb44a2ac =&gt; 1:a 3:bb 44:a 2:ac 思路12341. 前提是两者匹配出现，不会在最后面有多余2. 使用preg_split函数，根据\d和[a-zA-Z]进行分隔3. 循环数组，根据key进行字符串拼接4. implode(&apos; &apos;)，将数组合并 实现12345678910function number_alphabet($str)&#123; $result = []; //注意？防止使用贪婪匹配，否则不会截断字符串 $number = preg_replace("/[0-9]+?/", $str, PREG_SPLIT_NO_EMPTY); $alphabet = preg_replace("/[a-zA-Z]+?/", $str, PREG_SPLIT_NO_EMPTY); foreach ($number as $key=&gt;$vaule)&#123; array_push($result, $value.":".$alphabet[$key]); &#125; return array_implode(" ", $result);&#125;]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[二分查找]]></title>
+    <url>%2F2018%2F02%2F04%2Fbinary_search%2F</url>
+    <content type="text"><![CDATA[二分查找的前提是数组已经排序好 思路12341. 取出最小下标low和最大下标high2. 使用while循环3. 取出中间位置4. 再拿target和中间位置的数做比较，如果大于，则将low = middle+1，降低数据查找的范围。 实现1234567891011121314function binary_search($arr, $target) &#123; $high = count($arr); $low = 0; while ($high &gt;= $low)&#123; $middle = floor(($high + $low) / 2); if ($target &gt; $arr[$middle])&#123; $low = $middle + 1; &#125;elseif ($target &lt; $arr[$middle]) &#123; $high = $middle - 1; &#125;else &#123; return $middle; &#125; &#125;&#125;]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[计算质数]]></title>
+    <url>%2F2018%2F02%2F04%2Fprime_number%2F</url>
+    <content type="text"><![CDATA[求n以内的质数 思路123456质数是指大于1的正数，只能被1和本身整除简洁方法：如果到n/2还没有查找到，则该数为质数1. 从2开始，循环小于n的所有数2. 嵌套循环，循环小于每个值的二分之一的数3. 外层对内层数取余，如果等于0，则不是质数，跳出循环4. 内层循环结束，判断值是否超过了i/2，如果是，加入到结果数组 实现1234567891011121314function find_prime($n) &#123; $result = []; for ($i=2; $i&lt;=$n; $i++)&#123; for ($j=2; $j&lt;=$i/2; $j++)&#123; if ($i % $j == 0)&#123; break; &#125; &#125; if ($j &gt; $i/2)&#123; array_push($result, $i); &#125; &#125; return $result;&#125;]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[反转数组]]></title>
+    <url>%2F2018%2F02%2F04%2Freverge_array%2F</url>
+    <content type="text"><![CDATA[反转数组，反转字符串均可，有两种思路 第一种思路1231. 使用for循环2. 循环到i/2处，将每个值和count-i进行交换3. 返回原数组 实现123456789function reverge_array($arr)&#123; $count = count($arr) - 1; for ($i=0; $i&lt;=$count/2; $i++)&#123; $temp = $arr[$i]; $arr[$i] = $arr[$count-$i]; $arr[$count-$i] = $temp; &#125; return $arr;&#125; 第二种思路12341. 使用while循环2. 设置left和right，分别为第一个和数组最后一个的下标3. while判断right大于left，然后将arr[left]和arr[right]的值进行交换4. left++，right-- 实现123456789101112function reverge_array($arr)&#123; $left = 0; $right = count($arr)-1; while ($right &gt; $left)&#123; $tmp = $arr[$left]; $arr[$left] = $arr[$right]; $arr[$right] = $tmp; $right --; $left ++; &#125; return $arr;&#125;]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[打乱数组]]></title>
+    <url>%2F2018%2F02%2F04%2Fshuffle_array%2F</url>
+    <content type="text"><![CDATA[相当于shuffle函数 思路1231. for循环数组的每一个变量2. 使用随机数函数取出数组的另外一个随机值3. 将两者交换 实现123456789101112function shuffle_array($arr) &#123; $count = count($arr) -1 ; for ($i=0; $i&lt;=$count; $i++)&#123; $key = mt_rand(0, $count); if ($arr[$i] != $arr[$key])&#123; $tmp = $arr[$key]; $arr[$key] = $arr[$i]; $arr[$i] = $tmp; &#125; &#125; return $arr;&#125;]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[约瑟夫环]]></title>
+    <url>%2F2018%2F02%2F04%2Fjoseph_ring%2F</url>
+    <content type="text"><![CDATA[猴子问题，n个猴子围成圈，每第m个踢掉，最后剩下哪个 思路1231. 因为不知道具体的循环次数，所以使用while循环2. 使用临时变量i来计数，循环中每次取出第一个值3. 判断i对m取余是否为0，如果为0，则证明该值应该去掉，否则将其重新添加到队尾 实现123456789101112function joseph_ring($n, $m)&#123; $arr = range(1, $n); $i = 0; while (count($arr)&gt;1)&#123; $i ++: $left = array_shift($arr); if ($i % $m != 0) &#123; array_push($arr, $left); &#125; &#125; return $arr[0];&#125;]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[排序算法]]></title>
+    <url>%2F2018%2F02%2F04%2Fsort_algorithm%2F</url>
+    <content type="text"><![CDATA[冒泡排序思路1231. 设计算法复杂度为n方的嵌套循环2. i和j都从0开始，i&lt;count，j&lt;count-i-13. 比较arr[j]和arr[j+1]，如果arr[j]大于arr[j+1]，则交换顺序 实现12345678910111213function bubble_sort($arr) &#123; $count = count($arr); for ($i=0; $i&lt;$count; $i++) &#123; for ($j=0; $j&lt;$count-$i-1; $j++) &#123; if ($arr[$j] &gt; $arr[$j+1])&#123; $tmp = $arr[$j]; $arr[$j] = $arr[$j+1]; $arr[$j+1] = $tmp; &#125; &#125; &#125; return $arr;&#125; 快速排序思路123451. 取数组第一个值为标准值2. 设置比标准值大的数组为right，比标准值小的数组为left3. for循环数组所有变量，如果比标准值大则放到right，反之，放到left4. 分别对left和right使用递归，最后分别赋值给left和right5. 返回合并数组，顺序是left, [key], right 实现1234567891011121314151617function quick_sort($arr) &#123; $count = count($arr); if ($count &lt;= 1) return $arr; $key = $arr[0]; $left = []; $right = []; for ($i=1; $i&lt;$count; $i++) &#123; if ($arr[$i] &gt; $key)&#123; array_push($right, $arr[$i]); &#125;else &#123; array_push($left, $arr[$i]); &#125; &#125; $left = quick_sort($left); $right = quick_sort($right); return array_merge($left, [$key], $right);&#125;]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[位运算]]></title>
+    <url>%2F2018%2F02%2F03%2Fbit_operation%2F</url>
+    <content type="text"><![CDATA[基础语法 符号 描述 规则 &amp; 与 两位都是1时，结果为1 丨 或 两位有一个为1时，结果为1，否则为0 ^ 异或 两位相同时为0，不同时为1 ~ 取反 0变1，1变0 &lt;&lt; 左移 二进制全部位向左移动若干位，高位丢弃，低位补0 &gt;&gt; 右移 二进制全部位向右移动若干位，高位补0（无符号），有符号数，算数右移补符号位，逻辑右移不补符号位 常用算法判断是否是奇数123456$num = mt_rand(1, 1000);if ($num &amp; 1)&#123; echo '奇数:' . $num&#125;因为1的二进制为 000001，最后一位是1，两位相与，奇数会返回1，偶数会返回0 交换两数123456789101112131415function swap(&amp;$a, &amp;$b)&#123; $a ^= $b; $b ^= $a; $a ^= $b;&#125;使用异或操作第一步：$a = $a ^ $b第二步：$b = $a ^ $b ^ $b第三步：$a = $a ^ $b ^ $b ^ $a两个结论1. 相同的数进行异或操作结果为02. 任何数和0进行异或操作结果都为本身 变换符号1234$a = 100;~$a + 1取$a的相反数，正负号进行转换 计算绝对值12345678910$a = -100;//把31位全部移动，正数只会是0，负数会把最高位的1补齐，所以是-1$i = $a &gt;&gt; 31;return $i == 0 ? $a : ~$a + 1将a右移31位，如果是正数，结果为0，负数结果为-1另一种方法：$a = -100;$i = $a &gt;&gt; 31;return ($a ^ $i) - $i;]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[markdown语法]]></title>
+    <url>%2F2018%2F02%2F01%2Fmarkdown%2F</url>
+    <content type="text"><![CDATA[使用markdown已经一段时间了，为了加深理解，熟悉语法，总结一下，提高熟练程度。 123456789101112131415161718192021222324252627282930313233341. #有几个表示几级标题，一个则表示最顶级标题2. - 生成无序列表，相当于·3. [标题](https://www.baidu.com)显示标题，超链接到www.baidu.com这个网址4. --- *** ___生成分割线，习惯使用第一种5. ```php生成代码框，里面可以写代码在后面加上php，会将代码标记为php6. 1.数字. 这种格式生成有序列表7. ![title](http://www.baidu.com/logo.png)显示http://www.baidu.com/logo.png这个地址的图片，替代文字是title8. &gt;引用，暂时使用的比较少，块文字，表示引用9. 表格|用来分割单元格，-用来分割表头|id|标题||--|--||1|标题1||2|标题2|10. [![图片](http://www.baidu.com/img/bd_logo.png)](http://www.baidu.com)嵌套使用，给图片增加链接，使用中括号将代码分组]]></content>
+      <categories>
+        <category>学习笔记</category>
+      </categories>
+  </entry>
+  <entry>
+    <title><![CDATA[cors跨域问题]]></title>
+    <url>%2F2018%2F01%2F15%2Fcors%2F</url>
+    <content type="text"><![CDATA[以前碰到过跨域问题，这里整理了一下，主要是通过程序或者nginx配置实现的。 分析思路cross-origin resource sharing，跨域资源共享，简称为CORS，html5下很容易解决假设有两个网站，客户端：www.site.com ，服务器：www.example.com客户端要访问服务器的资源，发送ajax GET www.example.com/ajax/resource ，请求头中会增加Origin:www.site.com。 服务器返回头中要增加Access-Control-Allow-Orgin: *，这样客户端才会正常接收返回数据，没有的话会在console下报错。 还有这两项：Access-Control-Allow-Methods，Access-Control-Allow-Headers 1234query-user-information:1 Failed to load http://www.proton.work/test/ajax: No &apos;Access-Control-Allow-Origin&apos; header is present on the requested resource. Origin &apos;http://www.dep.work&apos; is therefore not allowed access.现在没有Access-Control-Allow-Origin头在请求的资源上，源站点因此不能正常访问 解决办法1.通过php程序里面处理 123456789101112//目前采用的php原生代码，可以实现简单的跨域访问处理如下://允许所有的域名header('Access-Control-Allow-Origin: *');//允许post，get请求header('Access-Control-Allow-Methods: POST,GET ');//允许的headerheader('Access-Control-Allow-Headers: content-type, x-requested-with');$json = ['succ'=&gt;true,'info'=&gt;['name'=&gt;'my-name']];//返回json字符串，如果直接用return返回的话，会报错echo json_encode($json);return ; 2.在laravel中增加cors处理 给路由增加中间件处理，实际上也是通过增加header头实现的，github上有barryvhd-cors包可以直接使用 12345678910111213141516171819202122//路由之前增加cors中间件处理Route::get('ajax', function (\Illuminate\Http\Request $request) &#123; $json = [ 'succ' =&gt; true, 'info' =&gt; [ 'name' =&gt; 'wjh' ] ]; echo json_encode($json); &#125;)-&gt;middleware('cors');//中间件文件Cors.phppublic function handle($request, \Closure $next)&#123; header('content-type:application:json;charset=utf8'); header('Access-Control-Allow-Origin: *'); header('Access-Control-Allow-Methods: GET,POST'); header('Access-Control-Allow-Headers: content-type,x-requested-with'); return $next($request); &#125; 3.nginx中处理cors 123456789if ($request_method = OPTION)&#123; add_header 'Access-Control-Allow-Orgin' *; add_header 'Access-Control-Allow-Credentials' 'true'; add_header 'Access-Control-Allow-Methods' 'GET,POST,OPTIONS'; add_header 'Access-Control-Allow-Headers' 'DNT, X-Mx-ReqToken, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type'; add_header 'Content-Type' 'text/plain charset=UTF-8'; add_header 'Content-Length' 0; return 200; &#125;]]></content>
+      <categories>
+        <category>网络</category>
+      </categories>
+      <tags>
+        <tag>网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[laravel队列源码分析]]></title>
+    <url>%2F2017%2F12%2F21%2Flaravel_queue%2F</url>
+    <content type="text"><![CDATA[php artisan queue:listen该命令通过php artisan queue:work来实现队列监听，源码中采用proc_open等相关函数实现多进程启动队列，每次启动均重启框架，所以性能上不是很高，占用的内存过大。但是在代码调试过程中可使用，每次更新队列文件的代码之后不需重新启动队列监听，即可实现队列文件的修改。 php artisan queue:listen12345678910111213141516171819202122232425//获取相关参数，之后调用queue Listener类，实现队列监听public function fire()&#123; $this-&gt;setListenerOptions(); $delay = $this-&gt;input-&gt;getOption('delay'); // The memory limit is the amount of memory we will allow the script to occupy // before killing it and letting a process manager restart it for us, which // is to protect us against any memory leaks that will be in the scripts. $memory = $this-&gt;input-&gt;getOption('memory'); $connection = $this-&gt;input-&gt;getArgument('connection'); $timeout = $this-&gt;input-&gt;getOption('timeout'); // We need to get the right queue for the connection which is set in the queue // configuration file for the application. We will pull it based on the set // connection being run for the queue operation currently being executed. $queue = $this-&gt;getQueue($connection); $this-&gt;listener-&gt;listen( $connection, $queue, $delay, $memory, $timeout );&#125; 123456789//创建进程，并通过无限循环调用进程public function listen($connection, $queue, $delay, $memory, $timeout = 60)&#123; $process = $this-&gt;makeProcess($connection, $queue, $delay, $memory, $timeout); while (true) &#123; $this-&gt;runProcess($process, $memory); &#125;&#125; 1234567891011121314//运行进程，回调函数表示可执行运行时输出，并且每次执行时验证是否超过内存限制public function runProcess(Process $process, $memory)&#123; $process-&gt;run(function ($type, $line) &#123; $this-&gt;handleWorkerOutput($type, $line); &#125;); // Once we have run the job we'll go check if the memory limit has been // exceeded for the script. If it has, we will kill this script so a // process manager will restart this with a clean slate of memory. if ($this-&gt;memoryExceeded($memory)) &#123; $this-&gt;stop(); &#125;&#125; 1234567//队列实际运行的过程public function run($callback = null)&#123; $this-&gt;start($callback); return $this-&gt;wait();&#125; php artisan queue:work省略获取参数相关的代码 第一步：获取任务前的处理12345678910111213141516171819202122如果有$daemon参数，则运行监听事件，否则只取出位于队首的元素执行WorkCommand.phpprotected function runWorker($connection, $queue, $delay, $memory, $daemon = false)&#123; $this-&gt;worker-&gt;setDaemonExceptionHandler( $this-&gt;laravel['Illuminate\Contracts\Debug\ExceptionHandler'] ); if ($daemon) &#123; $this-&gt;worker-&gt;setCache($this-&gt;laravel['cache']-&gt;driver()); return $this-&gt;worker-&gt;daemon( $connection, $queue, $delay, $memory, $this-&gt;option('sleep'), $this-&gt;option('tries') ); &#125; return $this-&gt;worker-&gt;pop( $connection, $queue, $delay, $this-&gt;option('sleep'), $this-&gt;option('tries') );&#125; 12345678910111213141516171819202122232425262728293031workr pop方法的代码，取出下一个元素之后运行，完成之后调用sleep方法Work.phppublic function pop($connectionName, $queue = null, $delay = 0, $sleep = 3, $maxTries = 0)&#123; try &#123; $connection = $this-&gt;manager-&gt;connection($connectionName); $job = $this-&gt;getNextJob($connection, $queue); // If we're able to pull a job off of the stack, we will process it and // then immediately return back out. If there is no job on the queue // we will "sleep" the worker for the specified number of seconds. if (! is_null($job)) &#123; return $this-&gt;process( $this-&gt;manager-&gt;getName($connectionName), $job, $maxTries, $delay ); &#125; &#125; catch (Exception $e) &#123; if ($this-&gt;exceptions) &#123; $this-&gt;exceptions-&gt;report($e); &#125; &#125; catch (Throwable $e) &#123; if ($this-&gt;exceptions) &#123; $this-&gt;exceptions-&gt;report(new FatalThrowableError($e)); &#125; &#125; $this-&gt;sleep($sleep); return ['job' =&gt; null, 'failed' =&gt; false];&#125; 12345678910111213141516队列容器采用redis时，$connection使用redis连接没有指定queue名称时，取默认的连接default如果指定队列名称，则用逗号分隔，按顺序取出所有数据Worker.phpprotected function getNextJob($connection, $queue)&#123; if (is_null($queue)) &#123; return $connection-&gt;pop(); &#125; foreach (explode(',', $queue) as $queue) &#123; if (! is_null($job = $connection-&gt;pop($queue))) &#123; return $job; &#125; &#125;&#125; 1234567891011121314151617181920212223从redis中取出队列数据1.首先将队列每次执行时检查所有的过期或执行中的任务，将其从有序集合中删除，同时重新推入到队列的末尾2.再取出队列头部的数据，并从redis中删除，之后添加到名称为$queue:reserved的有序集合中，表示该条数据正在处理中，过期时间为当前时间+redis的过期时间(每次检查时比较当前时间和这条数据的分值来判断是否过期，如果大于该分值，则表示已经过期，会进行过期处理，重新调回1步骤)RedisQueue.phppublic function pop($queue = null)&#123; $original = $queue ?: $this-&gt;default; $queue = $this-&gt;getQueue($queue); if (! is_null($this-&gt;expire)) &#123; $this-&gt;migrateAllExpiredJobs($queue); &#125; $job = $this-&gt;getConnection()-&gt;lpop($queue); if (! is_null($job)) &#123; $this-&gt;getConnection()-&gt;zadd($queue.':reserved', $this-&gt;getTime() + $this-&gt;expire, $job); return new RedisJob($this-&gt;container, $this, $job, $original); &#125;&#125; 处理异常数据123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051移除redis键为$queue:delayed和$queue:reserved名称的数据RedisQueue.phpprotected function migrateAllExpiredJobs($queue)&#123; $this-&gt;migrateExpiredJobs($queue.':delayed', $queue); $this-&gt;migrateExpiredJobs($queue.':reserved', $queue);&#125;取出所有过期的任务，如果数量大于0，则去掉，然后将任务推入到新的队列$this-&gt;getConnection()为Predis\Client类，通过他启动事务，同时对redis的键为$queue:reserved进行监听，取出所有超时任务进行删除，并将这些任务推入到队列尾部public function migrateExpiredJobs($from, $to)&#123; $options = ['cas' =&gt; true, 'watch' =&gt; $from, 'retry' =&gt; 10]; $this-&gt;getConnection()-&gt;transaction($options, function ($transaction) use ($from, $to) &#123; // First we need to get all of jobs that have expired based on the current time // so that we can push them onto the main queue. After we get them we simply // remove them from this "delay" queues. All of this within a transaction. $jobs = $this-&gt;getExpiredJobs( $transaction, $from, $time = $this-&gt;getTime() ); // If we actually found any jobs, we will remove them from the old queue and we // will insert them onto the new (ready) "queue". This means they will stand // ready to be processed by the queue worker whenever their turn comes up. if (count($jobs) &gt; 0) &#123; $this-&gt;removeExpiredJobs($transaction, $from, $time); $this-&gt;pushExpiredJobsOntoNewQueue($transaction, $to, $jobs); &#125; &#125;);&#125;$from为队列的键，$time是当前时间，取出有序集合中分数最小值到分数为当前时间的所有数据protected function getExpiredJobs($transaction, $from, $time)&#123; return $transaction-&gt;zrangebyscore($from, '-inf', $time);&#125;protected function removeExpiredJobs($transaction, $from, $time)&#123; $transaction-&gt;multi(); $transaction-&gt;zremrangebyscore($from, '-inf', $time);&#125;protected function pushExpiredJobsOntoNewQueue($transaction, $to, $jobs)&#123; call_user_func_array([$transaction, 'rpush'], array_merge([$to], $jobs)); 第二步：处理任务1234567891011121314151617181920212223242526272829303132333435回到取出队列数据后运行的代码先验证是否设置了最大尝试次数，如果任务记录的尝试次数大于最大尝试次数，则Work.phppublic function process($connection, Job $job, $maxTries = 0, $delay = 0)&#123; if ($maxTries &gt; 0 &amp;&amp; $job-&gt;attempts() &gt; $maxTries) &#123; return $this-&gt;logFailedJob($connection, $job); &#125; try &#123; // First we will fire off the job. Once it is done we will see if it will // be auto-deleted after processing and if so we will go ahead and run // the delete method on the job. Otherwise we will just keep moving. $job-&gt;fire(); $this-&gt;raiseAfterJobEvent($connection, $job); return ['job' =&gt; $job, 'failed' =&gt; false]; &#125; catch (Exception $e) &#123; // If we catch an exception, we will attempt to release the job back onto // the queue so it is not lost. This will let is be retried at a later // time by another listener (or the same one). We will do that here. if (! $job-&gt;isDeleted()) &#123; $job-&gt;release($delay); &#125; throw $e; &#125; catch (Throwable $e) &#123; if (! $job-&gt;isDeleted()) &#123; $job-&gt;release($delay); &#125; throw $e; &#125;&#125; 尝试次数过多处理 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768记录失败日志，如果设置了failer处理器，则失败日志Work.phpprotected function logFailedJob($connection, Job $job)&#123; if ($this-&gt;failer) &#123; $this-&gt;failer-&gt;log($connection, $job-&gt;getQueue(), $job-&gt;getRawBody()); $job-&gt;delete(); $job-&gt;failed(); $this-&gt;raiseFailedJobEvent($connection, $job); &#125; return ['job' =&gt; $job, 'failed' =&gt; true];&#125;插入当前时间的一条失败记录，payload为任务体，记录名称、连接等信息DatabaseFailedJobProvider.phppublic function log($connection, $queue, $payload)&#123; $failed_at = Carbon::now(); $this-&gt;getTable()-&gt;insert(compact('connection', 'queue', 'payload', 'failed_at'));&#125;RedisJob.phppublic function delete()&#123; parent::delete(); $this-&gt;redis-&gt;deleteReserved($this-&gt;queue, $this-&gt;job);&#125;由于上一步把每次处理的数据都从$queue中取出，放入$queue:reserved中，所以此处将该值从$queue:reserved中删除RedisQueuepublic function deleteReserved($queue, $job)&#123; $this-&gt;getConnection()-&gt;zrem($this-&gt;getQueue($queue).':reserved', $job);&#125;取出job，转换成对象CallQueuedHandler，调用failed方法，传入的值为任务的实体(也就是自己写的队列类)Job.phppublic function failed()&#123; $payload = json_decode($this-&gt;getRawBody(), true); list($class, $method) = $this-&gt;parseJob($payload['job']); $this-&gt;instance = $this-&gt;resolve($class); if (method_exists($this-&gt;instance, 'failed')) &#123; $this-&gt;instance-&gt;failed($this-&gt;resolveQueueableEntities($payload['data'])); &#125;&#125;调用任务类的failed方法CallQueuedHandler.phppublic function failed(array $data)&#123; $handler = $this-&gt;dispatcher-&gt;resolveHandler($command = unserialize($data['command'])); if (method_exists($handler, 'failed')) &#123; call_user_func([$handler, 'failed'], $command); &#125;&#125; 任务处理 12345678910队列数据例如：&#123; "job": "Illuminate\\Queue\\CallQueuedHandler@call", "data": &#123; "command": "O:24:\"App\\Commands\\TestCommand\":1:&#123;s:12:\"\u0000*\u0000requestNo\";i:18;&#125;" &#125;, "id": "P5nKwZs2LNSjOFBlVCPyvdK7jAAHCi3U", "attempts": 1&#125;job为队列处理的程序，data为要处理的数据(自己写的队列文件)，attempts为处理次数，推入队列时即为1 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788回到队列处理的process方法中，该方法调用fire()方法RedisJob.phppublic function fire()&#123; $this-&gt;resolveAndFire(json_decode($this-&gt;getRawBody(), true));&#125;protected function resolveAndFire(array $payload)&#123; list($class, $method) = $this-&gt;parseJob($payload['job']); $this-&gt;instance = $this-&gt;resolve($class); $this-&gt;instance-&gt;&#123;$method&#125;($this, $this-&gt;resolveQueueableEntities($payload['data']));&#125;通过@分割类和方法，调用CallQueuedHandler的call方法处理队列protected function parseJob($job)&#123; $segments = explode('@', $job); return count($segments) &gt; 1 ? $segments : [$segments[0], 'fire'];&#125;调用call方法，取出队列任务$command，调用Dispatch类的dispatchNow方法处理任务CallQueuedHandler.phppublic function call(Job $job, array $data)&#123; $command = $this-&gt;setJobInstanceIfNecessary( $job, unserialize($data['command']) ); $this-&gt;dispatcher-&gt;dispatchNow($command, function ($handler) use ($job) &#123; $this-&gt;setJobInstanceIfNecessary($job, $handler); &#125;); if (! $job-&gt;isDeletedOrReleased()) &#123; $job-&gt;delete(); &#125;&#125;队列类继承了SelfHandling接口，可以直接执行handle方法，afterResolving匿名函数貌似没有执行Dispatch.phppublic function dispatchNow($command, Closure $afterResolving = null)&#123; return $this-&gt;pipeline-&gt;send($command)-&gt;through($this-&gt;pipes)-&gt;then(function ($command) use ($afterResolving) &#123; if ($command instanceof SelfHandling) &#123; return $this-&gt;container-&gt;call([$command, 'handle']); &#125; $handler = $this-&gt;resolveHandler($command); if ($afterResolving) &#123; call_user_func($afterResolving, $handler); &#125; return call_user_func( [$handler, $this-&gt;getHandlerMethod($command)], $command ); &#125;);&#125;进入Container类的call方法，执行getMethodDependencies方法获取类的所有依赖，然后通过call_user_func_array函数调用[$command, 'handle']方法，参数为获取到的依赖对象Container.phppublic function call($callback, array $parameters = [], $defaultMethod = null)&#123; if ($this-&gt;isCallableWithAtSign($callback) || $defaultMethod) &#123; return $this-&gt;callClass($callback, $parameters, $defaultMethod); &#125; $dependencies = $this-&gt;getMethodDependencies($callback, $parameters); return call_user_func_array($callback, $dependencies);&#125;通过反射获取匿名函数的所有依赖Container.phpprotected function getMethodDependencies($callback, array $parameters = [])&#123; $dependencies = []; foreach ($this-&gt;getCallReflector($callback)-&gt;getParameters() as $key =&gt; $parameter) &#123; $this-&gt;addDependencyForCallParameter($parameter, $parameters, $dependencies); &#125; return array_merge($dependencies, $parameters);&#125; 执行完成后删除 1234567891011121314151617181920212223回到$job-&gt;isDeletedOrReleased(),此处将队列任务删除RedisJob.phppublic function isDeletedOrReleased()&#123; return $this-&gt;isDeleted() || $this-&gt;isReleased();&#125;RedisJob.phppublic function delete()&#123; parent::delete(); $this-&gt;redis-&gt;deleteReserved($this-&gt;queue, $this-&gt;job);&#125;将任务从redis为$queue:reserved的列表中删除，此处队列正常处理即为完成RedisQueue.phppublic function deleteReserved($queue, $job)&#123; $this-&gt;getConnection()-&gt;zrem($this-&gt;getQueue($queue).':reserved', $job);&#125; 触发处理后的事件illuminate.queue.after1234567891011121314激活illuminate.queue.after事件，参数为redis连接，任务，还有任务类protected function raiseAfterJobEvent($connection, Job $job)&#123; if ($this-&gt;events) &#123; $data = json_decode($job-&gt;getRawBody(), true); $this-&gt;events-&gt;fire('illuminate.queue.after', [$connection, $job, $data]); &#125;&#125;在AppServiceProvider.php中注册illuminate.queue.after事件Queue::after(function ($connection, $job, $data) &#123; // 写日志&#125;); 异常处理1234567891011121314151617181920212223首先看process方法的异常，抛出异常后执行$job-&gt;release($delay)方法，RedisJob::delete()方法为上面分析的删除方法，此处会把$queue:reserved的值删除。也就是说队列会把正在处理的任务放到delayed队列中。设置延迟时间为参数中的--delay参数，RedisJob.phppublic function release($delay = 0)&#123; parent::release($delay); $this-&gt;delete(); $this-&gt;redis-&gt;release($this-&gt;queue, $this-&gt;job, $delay, $this-&gt;attempts() + 1);&#125;设置当前任务的的attempts次数+1，同时添加到$queue:delayed的队列中，超时时间为当前时间+延迟秒数RedisQueue.phppublic function release($queue, $payload, $delay, $attempts)&#123; $payload = $this-&gt;setMeta($payload, 'attempts', $attempts); $this-&gt;getConnection()-&gt;zadd($this-&gt;getQueue($queue).':delayed', $this-&gt;getTime() + $delay, $payload);&#125;pop方法的异常处理，发送消息通知$this-&gt;exceptions-&gt;report($e); 疑问点：如果redis处理过程中down掉，存在reserved中数据不会清掉]]></content>
+      <categories>
+        <category>laravel</category>
+      </categories>
+      <tags>
+        <tag>laravel</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[composer命令及其配置]]></title>
+    <url>%2F2017%2F08%2F10%2Fcomposer%2F</url>
+    <content type="text"><![CDATA[配置文件12345678910111213141516171819202122232425查看所有配置项，一些看不懂的没有列出来composer config -l[repositories.packagist.org.type] composer//仓库地址[repositories.packagist.org.url] https://packagist.org[repositories.packagist.org.allow_ssl_downgrade] true...[github-protocols] [https, ssh][vendor-dir] vendor (/Users/user/Sites/atom/packages/tuling/vendor)[bin-dir] &#123;$vendor-dir&#125;/bin (/Users/user/Sites/atom/packages/tuling/vendor/bin)[cache-dir] /Users/user/.composer/cache[data-dir] /Users/user/.composer//缓存地址[cache-files-dir] &#123;$cache-dir&#125;/files (/Users/user/.composer/cache/files)[cache-repo-dir] &#123;$cache-dir&#125;/repo (/Users/user/.composer/cache/repo)[cache-vcs-dir] &#123;$cache-dir&#125;/vcs (/Users/user/.composer/cache/vcs)[cache-ttl] 15552000[cache-files-ttl] 15552000[cache-files-maxsize] 300MiB (314572800)...//composer全局配置地址[home] /Users/user/.composer require包的版本号规则1234567891011121314151617181920常用版本号规则，确定版本号、版本号范围、版本号通配符，2、3、4是常用的版本号规则&gt;= 是范围符号，大于某个//指定确定版本号1. 1.0.2 //在某个版本号的范围之内，可以加逗号、或运算符，&gt;=1.0,&lt;2.0 &gt;=1.0|&lt;2.0 逗号表示and，两个范围之内的版本号，|表示或者2. &gt;=1.0 // *星号表示匹配任意值，例如：表示1.0.*下的任意版本，等效于&gt;=1.0,&lt;1.13. 1.0.* //~波浪号表示在某一个重要版本下的小版本升级例如：在1.2.2版本之上升级，但是不升级到1.3.0版本 1.2 &gt;= 版本号 &lt; 1.3.0避免高版本不兼容低版本4. ~1.2.2 //^和~类似， 1.2.3 &lt;= 版本号 &lt; 2.0.0//比~的范围更广，匹配下一个重要版本（官网上没有，但实际中经常见到）5. ^1.2.3 composer.json示例文件1234567891011121314151617181920212223242526272829303132333435// composer.json配置文件"type": "library", //默认为library"require": &#123; //对php有版本限制 "php": "&gt;=5.6", //要求php扩展，必须安装ext-mbstring "ext-mbstring": "*", //要求php库，必须安装lib-curl "lib-curl": "*"&#125;,"require-dev": &#123;&#125;,"autoload": &#123; "psr-4": &#123; "App\\": "app/", "Monolog\\": ["src/", "lib/"] &#125;, "psr-0": &#123; "Monolog\\": ["src/", "lib/"] &#125;, "classmap": &#123; //不遵循psr-0/4规范 "database" &#125;, "files": &#123; //作为函数库引入 ["url/to/your/helpers.php"] &#125;&#125;,"repositories": &#123; "packagist": &#123; "type": "composer", "url": "https://packagist.phpcomposer.com" &#125;&#125;,//最低版本要求，尽量不要安装dev-master版本的包，安装稳定版"minimum-stability": "stable" 常用命令123456789101112//查看软件包被哪些包依赖composer depends guzzlehttp/guzzlecomposer initcomposer requirecomposer updatecomposer install —no-dev 跳过require-dev中列出的包 —dev 安装require-dev列出的包 //重建索引composer dump-autoload]]></content>
+      <categories>
+        <category>php</category>
+      </categories>
+      <tags>
+        <tag>composer</tag>
+      </tags>
+  </entry>
+</search>
