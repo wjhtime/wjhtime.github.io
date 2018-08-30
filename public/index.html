@@ -881,6 +881,165 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2018/05/10/docker_nginx/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wjh Time">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wjh blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/10/docker_nginx/" itemprop="url">docker实现nginx负载均衡</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-10T00:00:00+08:00">
+                2018-05-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>linux环境下docker实现nginx负载均衡环境搭建</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>启动1个php容器，处理php请求</p>
+<p>启动3个nginx容器，nginx1，nginx2，nginx_main，1和2是应用服务器，main是反向代理服务器</p>
+<p>所有对nginx_main的请求都会分布到nginx1和nginx2上面</p>
+<p>最后通过观察nginx1，2的访问日志可以看到效果</p>
+<h2 id="目录说明"><a href="#目录说明" class="headerlink" title="目录说明"></a>目录说明</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/var/www/html/laravel	主机的网站地址</span><br><span class="line">/usr/share/nginx/html	容器内的网站地址</span><br><span class="line">/root/docker/nginx/conf.d	主机的nginx配置目录</span><br><span class="line">/etc/nginx/conf.d	容器内的nginx配置目录</span><br><span class="line">/root/docker/nginx/nginx.conf	主机的nginx配置文件</span><br><span class="line">/etc/nginx/nginx.conf	容器内的nginx配置文件</span><br><span class="line">/root/docker/nginx/nginx_main.conf	主机的nginx代理服务器配置文件</span><br></pre></td></tr></table></figure>
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><p>1.启动php服务器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 拉取镜像</span><br><span class="line">docker pull php:7.0-fpm</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 启动容器</span><br><span class="line">docker run --name php -d -p 9001:9000 \</span><br><span class="line">-v /var/www/html/laravel:/usr/share/nginx/html php:7.0-fpm</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>安装pdo_mysql扩展</span><br><span class="line">docker-php-ext-install pdo_mysql</span><br></pre></td></tr></table></figure>
+<p>2.启动nginx1，2，关联php容器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 拉取nginx镜像</span><br><span class="line">docker pull nginx</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 启动nginx1容器</span><br><span class="line">docker run --name nginx1 -d -p 81:80 \</span><br><span class="line">-v /root/docker/nginx/conf.d:/etc/nginx/conf.d \</span><br><span class="line">-v /root/docker/nginx/nginx.conf:/etc/nginx/nginx.conf \</span><br><span class="line">-v /var/www/html/laravel:/usr/share/nginx/html --link php:php nginx</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 启动nginx2容器</span><br><span class="line">docker run --name nginx2 -d -p 82:80 \</span><br><span class="line">-v /root/docker/nginx/conf.d:/etc/nginx/conf.d \</span><br><span class="line">-v /root/docker/nginx/nginx.conf:/etc/nginx/nginx.conf \</span><br><span class="line">-v /var/www/html/laravel:/usr/share/nginx/html --link php:php nginx</span><br></pre></td></tr></table></figure>
+<p>nginx.conf配置</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">user</span> nginx;</span><br><span class="line"><span class="attribute">worker_processes</span> <span class="number">1</span>;</span><br><span class="line"><span class="attribute">error_log</span> /var/log/nginx/error.log <span class="literal">warn</span>;</span><br><span class="line"><span class="attribute">pid</span> /var/run/nginx.pid;</span><br><span class="line"></span><br><span class="line"><span class="section">events</span> &#123;</span><br><span class="line">    <span class="attribute">worker_connections</span> <span class="number">1024</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">http</span> &#123;</span><br><span class="line">    <span class="attribute">include</span> /etc/nginx/mime.types;</span><br><span class="line">    <span class="attribute">default_type</span> application/octet-stream;</span><br><span class="line">    <span class="attribute">log_format</span> main <span class="string">'<span class="variable">$remote_addr</span> - <span class="variable">$remote_user</span> [<span class="variable">$time_local</span>] "<span class="variable">$request</span>" '</span></span><br><span class="line">        <span class="string">'<span class="variable">$status</span> <span class="variable">$body_bytes_sent</span> "<span class="variable">$http_referer</span>"'</span></span><br><span class="line">        <span class="string">'"<span class="variable">$http_user_agent</span>" "<span class="variable">$http_x_forwarded_for</span>"'</span></span><br><span class="line">    access_log /var/log/nginx/access.log main;</span><br><span class="line">    <span class="attribute">sendfile</span> <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">keepalive_timeout</span> <span class="number">65</span>;</span><br><span class="line">    <span class="attribute">include</span> /etc/nginx/conf.d/<span class="regexp">*.conf</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>default.conf配置</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span> localhost;</span><br><span class="line">    <span class="attribute">root</span> /usr/share/nginx/html/public;</span><br><span class="line">    <span class="attribute">index</span> index.php index.html index.htm;</span><br><span class="line">    </span><br><span class="line">    <span class="attribute">location</span> <span class="regexp">~* \.(gif|jpg|png|css|js|flv|swf|ico|woff|ttf|woff2)(.*)$</span> &#123;</span><br><span class="line">        <span class="attribute">access_log</span> <span class="literal">off</span>;</span><br><span class="line">        <span class="attribute">expires</span> <span class="number">30d</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="attribute">location</span> / &#123;</span><br><span class="line">        <span class="attribute">try_files</span> <span class="variable">$uri</span> <span class="variable">$uri</span>/ /index.php<span class="variable">$is_args</span><span class="variable">$args</span>;</span><br><span class="line">        <span class="comment"># 连接php容器的9000端口</span></span><br><span class="line">        <span class="attribute">fastcgi_pass</span> php:<span class="number">9000</span>;</span><br><span class="line">        <span class="attribute">fastcgi_index</span> index.php;</span><br><span class="line">        <span class="attribute">fastcgi_buffers</span> <span class="number">16</span> <span class="number">16k</span>;</span><br><span class="line">        <span class="attribute">fastcgi_buffer_size</span> <span class="number">32k</span>;</span><br><span class="line">        <span class="attribute">fastcgi_param</span> SCRIPT_FILENAME <span class="variable">$document_root</span><span class="variable">$fastcgi_script_name</span>;</span><br><span class="line">        <span class="attribute">fastcgi_read_timeout</span> <span class="number">600</span>;</span><br><span class="line">        <span class="attribute">include</span> fastcgi_params;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># fastcgi_pass里的php为php容器</span></span><br></pre></td></tr></table></figure>
+<p>3.启动nginx_main反向代理服务器，关联nginx1和nginx2</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run --name nginx_main -d -p 83:80 \</span><br><span class="line">-v /root/docker/nginx/nginx_main.conf:/etc/nginx/nginx.conf --link nginx1:nginx1 --link nginx2:nginx2 nginx</span><br></pre></td></tr></table></figure>
+<p>nginx_main反向代理服务器配置</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">user</span> nginx;</span><br><span class="line"><span class="attribute">worker_processes</span> auto;</span><br><span class="line"><span class="attribute">error_log</span> /var/log/nginx/error.log;</span><br><span class="line"><span class="attribute">pid</span> /run/nginx.pid;</span><br><span class="line"></span><br><span class="line"><span class="comment"># include /usr/share/nginx/modules/*.conf;</span></span><br><span class="line"></span><br><span class="line"><span class="section">event</span> &#123;</span><br><span class="line">	<span class="attribute">worker_connections</span> <span class="number">1024</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">http</span> &#123;</span><br><span class="line">	<span class="comment"># 反向代理配置，nginx1的权重是2，nginx2的权重是3</span></span><br><span class="line">	<span class="attribute">upstream</span> php-fpm &#123;</span><br><span class="line">		<span class="attribute">server</span> nginx1 weight=<span class="number">2</span>;</span><br><span class="line">		<span class="attribute">server</span> nginx2 weight=<span class="number">3</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="attribute">log_format</span> main <span class="string">'<span class="variable">$remote_addr</span> - <span class="variable">$remote_user</span> [<span class="variable">$time_local</span>] "<span class="variable">$request</span>" '</span></span><br><span class="line">                     <span class="string">'<span class="variable">$status</span> <span class="variable">$body_bytes_sent</span> "<span class="variable">$http_referer</span>" '</span></span><br><span class="line">                     <span class="string">'"<span class="variable">$http_user_agent</span>" "<span class="variable">$http_x_forwarded_for</span>"'</span>;</span><br><span class="line">	<span class="attribute">access_log</span>  /var/log/nginx/access.log  main;</span><br><span class="line">	<span class="attribute">sendfile</span>            <span class="literal">on</span>;</span><br><span class="line">	<span class="attribute">tcp_nopush</span>          <span class="literal">on</span>;</span><br><span class="line">	<span class="attribute">tcp_nodelay</span>         <span class="literal">on</span>;</span><br><span class="line">	<span class="attribute">keepalive_timeout</span>   <span class="number">65</span>;</span><br><span class="line">	<span class="attribute">types_hash_max_size</span> <span class="number">2048</span>;</span><br><span class="line"></span><br><span class="line">	<span class="attribute">include</span>             /etc/nginx/mime.types;</span><br><span class="line">	<span class="attribute">default_type</span>        application/octet-stream;</span><br><span class="line"></span><br><span class="line">	<span class="section">server</span> &#123;</span><br><span class="line">		<span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">		<span class="attribute">server_name</span> localhost;</span><br><span class="line">		<span class="attribute">root</span> /usr/share/nginx/html;</span><br><span class="line">		<span class="attribute">location</span> / &#123;</span><br><span class="line">			<span class="comment"># 此处的php-fpm为上面upstream模块配置的php-fpm</span></span><br><span class="line">			<span class="attribute">proxy_pass</span> http://php-fpm;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># proxy_pass的php-fpm必须加上http://，否则报错</span></span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2018/05/10/docker_mysql/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -996,165 +1155,6 @@
 <p>两个的log-bin配置均采用mysql-bin的方式</p>
 <p>5.后续增加从服务器</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># master服务器</span><br><span class="line">flush tables with read lock;</span><br><span class="line"></span><br><span class="line"># 记录日志点</span><br><span class="line">show master status;</span><br><span class="line"></span><br><span class="line"># 导出</span><br><span class="line">mysql_dump -R uroot -p database &gt; /tmp/database.sql</span><br><span class="line">unlock tables;</span><br><span class="line"></span><br><span class="line">从服务器的配置方法同上</span><br><span class="line">创建一个server_id=3的配置文件，一个数据挂载目录</span><br><span class="line">source /tmp/database.sql</span><br><span class="line">change master to ...</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2018/05/10/docker_nginx/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Wjh Time">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="wjh blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/10/docker_nginx/" itemprop="url">docker实现nginx负载均衡</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-10T00:00:00+08:00">
-                2018-05-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/docker/" itemprop="url" rel="index">
-                    <span itemprop="name">docker</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>linux环境下docker实现nginx负载均衡环境搭建</p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>启动1个php容器，处理php请求</p>
-<p>启动3个nginx容器，nginx1，nginx2，nginx_main，1和2是应用服务器，main是反向代理服务器</p>
-<p>所有对nginx_main的请求都会分布到nginx1和nginx2上面</p>
-<p>最后通过观察nginx1，2的访问日志可以看到效果</p>
-<h2 id="目录说明"><a href="#目录说明" class="headerlink" title="目录说明"></a>目录说明</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/var/www/html/laravel	主机的网站地址</span><br><span class="line">/usr/share/nginx/html	容器内的网站地址</span><br><span class="line">/root/docker/nginx/conf.d	主机的nginx配置目录</span><br><span class="line">/etc/nginx/conf.d	容器内的nginx配置目录</span><br><span class="line">/root/docker/nginx/nginx.conf	主机的nginx配置文件</span><br><span class="line">/etc/nginx/nginx.conf	容器内的nginx配置文件</span><br><span class="line">/root/docker/nginx/nginx_main.conf	主机的nginx代理服务器配置文件</span><br></pre></td></tr></table></figure>
-<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><p>1.启动php服务器</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 拉取镜像</span><br><span class="line">docker pull php:7.0-fpm</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 启动容器</span><br><span class="line">docker run --name php -d -p 9001:9000 \</span><br><span class="line">-v /var/www/html/laravel:/usr/share/nginx/html php:7.0-fpm</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>安装pdo_mysql扩展</span><br><span class="line">docker-php-ext-install pdo_mysql</span><br></pre></td></tr></table></figure>
-<p>2.启动nginx1，2，关联php容器</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 拉取nginx镜像</span><br><span class="line">docker pull nginx</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 启动nginx1容器</span><br><span class="line">docker run --name nginx1 -d -p 81:80 \</span><br><span class="line">-v /root/docker/nginx/conf.d:/etc/nginx/conf.d \</span><br><span class="line">-v /root/docker/nginx/nginx.conf:/etc/nginx/nginx.conf \</span><br><span class="line">-v /var/www/html/laravel:/usr/share/nginx/html --link php:php nginx</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 启动nginx2容器</span><br><span class="line">docker run --name nginx2 -d -p 82:80 \</span><br><span class="line">-v /root/docker/nginx/conf.d:/etc/nginx/conf.d \</span><br><span class="line">-v /root/docker/nginx/nginx.conf:/etc/nginx/nginx.conf \</span><br><span class="line">-v /var/www/html/laravel:/usr/share/nginx/html --link php:php nginx</span><br></pre></td></tr></table></figure>
-<p>nginx.conf配置</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">user</span> nginx;</span><br><span class="line"><span class="attribute">worker_processes</span> <span class="number">1</span>;</span><br><span class="line"><span class="attribute">error_log</span> /var/log/nginx/error.log <span class="literal">warn</span>;</span><br><span class="line"><span class="attribute">pid</span> /var/run/nginx.pid;</span><br><span class="line"></span><br><span class="line"><span class="section">events</span> &#123;</span><br><span class="line">    <span class="attribute">worker_connections</span> <span class="number">1024</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">http</span> &#123;</span><br><span class="line">    <span class="attribute">include</span> /etc/nginx/mime.types;</span><br><span class="line">    <span class="attribute">default_type</span> application/octet-stream;</span><br><span class="line">    <span class="attribute">log_format</span> main <span class="string">'<span class="variable">$remote_addr</span> - <span class="variable">$remote_user</span> [<span class="variable">$time_local</span>] "<span class="variable">$request</span>" '</span></span><br><span class="line">        <span class="string">'<span class="variable">$status</span> <span class="variable">$body_bytes_sent</span> "<span class="variable">$http_referer</span>"'</span></span><br><span class="line">        <span class="string">'"<span class="variable">$http_user_agent</span>" "<span class="variable">$http_x_forwarded_for</span>"'</span></span><br><span class="line">    access_log /var/log/nginx/access.log main;</span><br><span class="line">    <span class="attribute">sendfile</span> <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">keepalive_timeout</span> <span class="number">65</span>;</span><br><span class="line">    <span class="attribute">include</span> /etc/nginx/conf.d/<span class="regexp">*.conf</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>default.conf配置</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span> localhost;</span><br><span class="line">    <span class="attribute">root</span> /usr/share/nginx/html/public;</span><br><span class="line">    <span class="attribute">index</span> index.php index.html index.htm;</span><br><span class="line">    </span><br><span class="line">    <span class="attribute">location</span> <span class="regexp">~* \.(gif|jpg|png|css|js|flv|swf|ico|woff|ttf|woff2)(.*)$</span> &#123;</span><br><span class="line">        <span class="attribute">access_log</span> <span class="literal">off</span>;</span><br><span class="line">        <span class="attribute">expires</span> <span class="number">30d</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="attribute">location</span> / &#123;</span><br><span class="line">        <span class="attribute">try_files</span> <span class="variable">$uri</span> <span class="variable">$uri</span>/ /index.php<span class="variable">$is_args</span><span class="variable">$args</span>;</span><br><span class="line">        <span class="comment"># 连接php容器的9000端口</span></span><br><span class="line">        <span class="attribute">fastcgi_pass</span> php:<span class="number">9000</span>;</span><br><span class="line">        <span class="attribute">fastcgi_index</span> index.php;</span><br><span class="line">        <span class="attribute">fastcgi_buffers</span> <span class="number">16</span> <span class="number">16k</span>;</span><br><span class="line">        <span class="attribute">fastcgi_buffer_size</span> <span class="number">32k</span>;</span><br><span class="line">        <span class="attribute">fastcgi_param</span> SCRIPT_FILENAME <span class="variable">$document_root</span><span class="variable">$fastcgi_script_name</span>;</span><br><span class="line">        <span class="attribute">fastcgi_read_timeout</span> <span class="number">600</span>;</span><br><span class="line">        <span class="attribute">include</span> fastcgi_params;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># fastcgi_pass里的php为php容器</span></span><br></pre></td></tr></table></figure>
-<p>3.启动nginx_main反向代理服务器，关联nginx1和nginx2</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run --name nginx_main -d -p 83:80 \</span><br><span class="line">-v /root/docker/nginx/nginx_main.conf:/etc/nginx/nginx.conf --link nginx1:nginx1 --link nginx2:nginx2 nginx</span><br></pre></td></tr></table></figure>
-<p>nginx_main反向代理服务器配置</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">user</span> nginx;</span><br><span class="line"><span class="attribute">worker_processes</span> auto;</span><br><span class="line"><span class="attribute">error_log</span> /var/log/nginx/error.log;</span><br><span class="line"><span class="attribute">pid</span> /run/nginx.pid;</span><br><span class="line"></span><br><span class="line"><span class="comment"># include /usr/share/nginx/modules/*.conf;</span></span><br><span class="line"></span><br><span class="line"><span class="section">event</span> &#123;</span><br><span class="line">	<span class="attribute">worker_connections</span> <span class="number">1024</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">http</span> &#123;</span><br><span class="line">	<span class="comment"># 反向代理配置，nginx1的权重是2，nginx2的权重是3</span></span><br><span class="line">	<span class="attribute">upstream</span> php-fpm &#123;</span><br><span class="line">		<span class="attribute">server</span> nginx1 weight=<span class="number">2</span>;</span><br><span class="line">		<span class="attribute">server</span> nginx2 weight=<span class="number">3</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="attribute">log_format</span> main <span class="string">'<span class="variable">$remote_addr</span> - <span class="variable">$remote_user</span> [<span class="variable">$time_local</span>] "<span class="variable">$request</span>" '</span></span><br><span class="line">                     <span class="string">'<span class="variable">$status</span> <span class="variable">$body_bytes_sent</span> "<span class="variable">$http_referer</span>" '</span></span><br><span class="line">                     <span class="string">'"<span class="variable">$http_user_agent</span>" "<span class="variable">$http_x_forwarded_for</span>"'</span>;</span><br><span class="line">	<span class="attribute">access_log</span>  /var/log/nginx/access.log  main;</span><br><span class="line">	<span class="attribute">sendfile</span>            <span class="literal">on</span>;</span><br><span class="line">	<span class="attribute">tcp_nopush</span>          <span class="literal">on</span>;</span><br><span class="line">	<span class="attribute">tcp_nodelay</span>         <span class="literal">on</span>;</span><br><span class="line">	<span class="attribute">keepalive_timeout</span>   <span class="number">65</span>;</span><br><span class="line">	<span class="attribute">types_hash_max_size</span> <span class="number">2048</span>;</span><br><span class="line"></span><br><span class="line">	<span class="attribute">include</span>             /etc/nginx/mime.types;</span><br><span class="line">	<span class="attribute">default_type</span>        application/octet-stream;</span><br><span class="line"></span><br><span class="line">	<span class="section">server</span> &#123;</span><br><span class="line">		<span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">		<span class="attribute">server_name</span> localhost;</span><br><span class="line">		<span class="attribute">root</span> /usr/share/nginx/html;</span><br><span class="line">		<span class="attribute">location</span> / &#123;</span><br><span class="line">			<span class="comment"># 此处的php-fpm为上面upstream模块配置的php-fpm</span></span><br><span class="line">			<span class="attribute">proxy_pass</span> http://php-fpm;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># proxy_pass的php-fpm必须加上http://，否则报错</span></span><br></pre></td></tr></table></figure>
 
           
         
@@ -1515,7 +1515,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2018/02/04/split_numbers_and_alphabet/">
+    <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2018/02/04/prime_number/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Wjh Time">
@@ -1534,7 +1534,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/02/04/split_numbers_and_alphabet/" itemprop="url">将字符串和数字分组</a></h1>
+                <a class="post-title-link" href="/2018/02/04/prime_number/" itemprop="url">计算质数</a></h1>
         
 
         <div class="post-meta">
@@ -1608,9 +1608,9 @@
       
         
           
-            <p>分组格式化字符串<br>1a3bb44a2ac =&gt; 1:a 3:bb 44:a 2:ac</p>
-<h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 前提是两者匹配出现，不会在最后面有多余</span><br><span class="line">2. 使用preg_split函数，根据\d和[a-zA-Z]进行分隔</span><br><span class="line">3. 循环数组，根据key进行字符串拼接</span><br><span class="line">4. implode(&apos; &apos;)，将数组合并</span><br></pre></td></tr></table></figure>
-<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">number_alphabet</span><span class="params">($str)</span></span>&#123;</span><br><span class="line">    $result = [];</span><br><span class="line">    <span class="comment">//注意？防止使用贪婪匹配，否则不会截断字符串</span></span><br><span class="line">    $number = preg_replace(<span class="string">"/[0-9]+?/"</span>, $str, PREG_SPLIT_NO_EMPTY);</span><br><span class="line">    $alphabet = preg_replace(<span class="string">"/[a-zA-Z]+?/"</span>, $str, PREG_SPLIT_NO_EMPTY);</span><br><span class="line">    <span class="keyword">foreach</span> ($number <span class="keyword">as</span> $key=&gt;$vaule)&#123;</span><br><span class="line">        array_push($result, $value.<span class="string">":"</span>.$alphabet[$key]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> array_implode(<span class="string">" "</span>, $result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+            <p>求n以内的质数</p>
+<h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">质数是指大于1的正数，只能被1和本身整除</span><br><span class="line">简洁方法：如果到n/2还没有查找到，则该数为质数</span><br><span class="line">1. 从2开始，循环小于n的所有数</span><br><span class="line">2. 嵌套循环，循环小于每个值的二分之一的数</span><br><span class="line">3. 外层对内层数取余，如果等于0，则不是质数，跳出循环</span><br><span class="line">4. 内层循环结束，判断值是否超过了i/2，如果是，加入到结果数组</span><br></pre></td></tr></table></figure>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">find_prime</span><span class="params">($n)</span> </span>&#123;</span><br><span class="line">    $result = [];</span><br><span class="line">    <span class="keyword">for</span> ($i=<span class="number">2</span>; $i&lt;=$n; $i++)&#123;</span><br><span class="line">        <span class="keyword">for</span> ($j=<span class="number">2</span>; $j&lt;=$i/<span class="number">2</span>; $j++)&#123;</span><br><span class="line">            <span class="keyword">if</span> ($i % $j == <span class="number">0</span>)&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> ($j &gt; $i/<span class="number">2</span>)&#123;</span><br><span class="line">            array_push($result, $i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
           
         
       
