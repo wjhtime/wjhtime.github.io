@@ -303,7 +303,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2018/02/04/joseph_ring/">
+    <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2018/02/04/binary_search/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Wjh Time">
@@ -322,7 +322,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/02/04/joseph_ring/" itemprop="url">约瑟夫环</a></h1>
+                <a class="post-title-link" href="/2018/02/04/binary_search/" itemprop="url">二分查找</a></h1>
         
 
         <div class="post-meta">
@@ -396,9 +396,152 @@
       
         
           
-            <p>猴子问题，n个猴子围成圈，每第m个踢掉，最后剩下哪个</p>
-<h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 因为不知道具体的循环次数，所以使用while循环</span><br><span class="line">2. 使用临时变量i来计数，循环中每次取出第一个值</span><br><span class="line">3. 判断i对m取余是否为0，如果为0，则证明该值应该去掉，否则将其重新添加到队尾</span><br></pre></td></tr></table></figure>
-<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">joseph_ring</span><span class="params">($n, $m)</span></span>&#123;</span><br><span class="line">    $arr = range(<span class="number">1</span>, $n);</span><br><span class="line">    $i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (count($arr)&gt;<span class="number">1</span>)&#123;</span><br><span class="line">        $i ++:</span><br><span class="line">        $left = array_shift($arr);</span><br><span class="line">        <span class="keyword">if</span> ($i % $m != <span class="number">0</span>) &#123;</span><br><span class="line">            array_push($arr, $left);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $arr[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+            <p>二分查找的前提是数组已经排序好</p>
+<h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 取出最小下标low和最大下标high</span><br><span class="line">2. 使用while循环</span><br><span class="line">3. 取出中间位置</span><br><span class="line">4. 再拿target和中间位置的数做比较，如果大于，则将low = middle+1，降低数据查找的范围。</span><br></pre></td></tr></table></figure>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">binary_search</span><span class="params">($arr, $target)</span> </span>&#123;</span><br><span class="line">    $high = count($arr);</span><br><span class="line">    $low = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> ($high &gt;= $low)&#123;</span><br><span class="line">        $middle = floor(($high + $low) / <span class="number">2</span>);</span><br><span class="line">        <span class="keyword">if</span> ($target &gt; $arr[$middle])&#123;</span><br><span class="line">            $low = $middle + <span class="number">1</span>;</span><br><span class="line">        &#125;<span class="keyword">elseif</span> ($target &lt; $arr[$middle]) &#123;</span><br><span class="line">            $high = $middle - <span class="number">1</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> $middle;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2018/02/04/split_numbers_and_alphabet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wjh Time">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wjh blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/02/04/split_numbers_and_alphabet/" itemprop="url">将字符串和数字分组</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-04T00:00:00+08:00">
+                2018-02-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>分组格式化字符串<br>1a3bb44a2ac =&gt; 1:a 3:bb 44:a 2:ac</p>
+<h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 前提是两者匹配出现，不会在最后面有多余</span><br><span class="line">2. 使用preg_split函数，根据\d和[a-zA-Z]进行分隔</span><br><span class="line">3. 循环数组，根据key进行字符串拼接</span><br><span class="line">4. implode(&apos; &apos;)，将数组合并</span><br></pre></td></tr></table></figure>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">number_alphabet</span><span class="params">($str)</span></span>&#123;</span><br><span class="line">    $result = [];</span><br><span class="line">    <span class="comment">//注意？防止使用贪婪匹配，否则不会截断字符串</span></span><br><span class="line">    $number = preg_replace(<span class="string">"/[0-9]+?/"</span>, $str, PREG_SPLIT_NO_EMPTY);</span><br><span class="line">    $alphabet = preg_replace(<span class="string">"/[a-zA-Z]+?/"</span>, $str, PREG_SPLIT_NO_EMPTY);</span><br><span class="line">    <span class="keyword">foreach</span> ($number <span class="keyword">as</span> $key=&gt;$vaule)&#123;</span><br><span class="line">        array_push($result, $value.<span class="string">":"</span>.$alphabet[$key]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> array_implode(<span class="string">" "</span>, $result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
           
         
       
@@ -542,151 +685,6 @@
             <p>相当于shuffle函数</p>
 <h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. for循环数组的每一个变量</span><br><span class="line">2. 使用随机数函数取出数组的另外一个随机值</span><br><span class="line">3. 将两者交换</span><br></pre></td></tr></table></figure>
 <h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shuffle_array</span><span class="params">($arr)</span> </span>&#123;</span><br><span class="line">    $count = count($arr) <span class="number">-1</span> ;</span><br><span class="line">    <span class="keyword">for</span> ($i=<span class="number">0</span>; $i&lt;=$count; $i++)&#123;</span><br><span class="line">        $key = mt_rand(<span class="number">0</span>, $count);</span><br><span class="line">        <span class="keyword">if</span> ($arr[$i] != $arr[$key])&#123;</span><br><span class="line">            $tmp = $arr[$key];</span><br><span class="line">            $arr[$key] = $arr[$i];</span><br><span class="line">            $arr[$i] = $tmp;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2018/02/04/sort_algorithm/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Wjh Time">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="wjh blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/04/sort_algorithm/" itemprop="url">排序算法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-04T00:00:00+08:00">
-                2018-02-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h3><h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 设计算法复杂度为n方的嵌套循环</span><br><span class="line">2. i和j都从0开始，i&lt;count，j&lt;count-i-1</span><br><span class="line">3. 比较arr[j]和arr[j+1]，如果arr[j]大于arr[j+1]，则交换顺序</span><br></pre></td></tr></table></figure>
-<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bubble_sort</span><span class="params">($arr)</span> </span>&#123;</span><br><span class="line">    $count = count($arr);</span><br><span class="line">    <span class="keyword">for</span> ($i=<span class="number">0</span>; $i&lt;$count; $i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> ($j=<span class="number">0</span>; $j&lt;$count-$i<span class="number">-1</span>; $j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> ($arr[$j] &gt; $arr[$j+<span class="number">1</span>])&#123;</span><br><span class="line">                $tmp = $arr[$j];</span><br><span class="line">                $arr[$j] = $arr[$j+<span class="number">1</span>];</span><br><span class="line">                $arr[$j+<span class="number">1</span>] = $tmp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h3><h4 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. 取数组第一个值为标准值</span><br><span class="line">2. 设置比标准值大的数组为right，比标准值小的数组为left</span><br><span class="line">3. for循环数组所有变量，如果比标准值大则放到right，反之，放到left</span><br><span class="line">4. 分别对left和right使用递归，最后分别赋值给left和right</span><br><span class="line">5. 返回合并数组，顺序是left, [key], right</span><br></pre></td></tr></table></figure>
-<h3 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">quick_sort</span><span class="params">($arr)</span> </span>&#123;</span><br><span class="line">    $count = count($arr);</span><br><span class="line">    <span class="keyword">if</span> ($count &lt;= <span class="number">1</span>) <span class="keyword">return</span> $arr;</span><br><span class="line">    $key = $arr[<span class="number">0</span>];</span><br><span class="line">    $left = [];</span><br><span class="line">    $right = [];</span><br><span class="line">    <span class="keyword">for</span> ($i=<span class="number">1</span>; $i&lt;$count; $i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> ($arr[$i] &gt; $key)&#123;</span><br><span class="line">            array_push($right, $arr[$i]);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            array_push($left, $arr[$i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    $left = quick_sort($left);</span><br><span class="line">    $right = quick_sort($right);</span><br><span class="line">    <span class="keyword">return</span> array_merge($left, [$key], $right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
           
         
       
@@ -879,7 +877,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2018/02/04/split_numbers_and_alphabet/">
+    <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2018/02/04/sort_algorithm/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Wjh Time">
@@ -898,7 +896,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/02/04/split_numbers_and_alphabet/" itemprop="url">将字符串和数字分组</a></h1>
+                <a class="post-title-link" href="/2018/02/04/sort_algorithm/" itemprop="url">排序算法</a></h1>
         
 
         <div class="post-meta">
@@ -972,9 +970,154 @@
       
         
           
-            <p>分组格式化字符串<br>1a3bb44a2ac =&gt; 1:a 3:bb 44:a 2:ac</p>
-<h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 前提是两者匹配出现，不会在最后面有多余</span><br><span class="line">2. 使用preg_split函数，根据\d和[a-zA-Z]进行分隔</span><br><span class="line">3. 循环数组，根据key进行字符串拼接</span><br><span class="line">4. implode(&apos; &apos;)，将数组合并</span><br></pre></td></tr></table></figure>
-<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">number_alphabet</span><span class="params">($str)</span></span>&#123;</span><br><span class="line">    $result = [];</span><br><span class="line">    <span class="comment">//注意？防止使用贪婪匹配，否则不会截断字符串</span></span><br><span class="line">    $number = preg_replace(<span class="string">"/[0-9]+?/"</span>, $str, PREG_SPLIT_NO_EMPTY);</span><br><span class="line">    $alphabet = preg_replace(<span class="string">"/[a-zA-Z]+?/"</span>, $str, PREG_SPLIT_NO_EMPTY);</span><br><span class="line">    <span class="keyword">foreach</span> ($number <span class="keyword">as</span> $key=&gt;$vaule)&#123;</span><br><span class="line">        array_push($result, $value.<span class="string">":"</span>.$alphabet[$key]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> array_implode(<span class="string">" "</span>, $result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+            <h3 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h3><h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 设计算法复杂度为n方的嵌套循环</span><br><span class="line">2. i和j都从0开始，i&lt;count，j&lt;count-i-1</span><br><span class="line">3. 比较arr[j]和arr[j+1]，如果arr[j]大于arr[j+1]，则交换顺序</span><br></pre></td></tr></table></figure>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bubble_sort</span><span class="params">($arr)</span> </span>&#123;</span><br><span class="line">    $count = count($arr);</span><br><span class="line">    <span class="keyword">for</span> ($i=<span class="number">0</span>; $i&lt;$count; $i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> ($j=<span class="number">0</span>; $j&lt;$count-$i<span class="number">-1</span>; $j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> ($arr[$j] &gt; $arr[$j+<span class="number">1</span>])&#123;</span><br><span class="line">                $tmp = $arr[$j];</span><br><span class="line">                $arr[$j] = $arr[$j+<span class="number">1</span>];</span><br><span class="line">                $arr[$j+<span class="number">1</span>] = $tmp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h3><h4 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. 取数组第一个值为标准值</span><br><span class="line">2. 设置比标准值大的数组为right，比标准值小的数组为left</span><br><span class="line">3. for循环数组所有变量，如果比标准值大则放到right，反之，放到left</span><br><span class="line">4. 分别对left和right使用递归，最后分别赋值给left和right</span><br><span class="line">5. 返回合并数组，顺序是left, [key], right</span><br></pre></td></tr></table></figure>
+<h3 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">quick_sort</span><span class="params">($arr)</span> </span>&#123;</span><br><span class="line">    $count = count($arr);</span><br><span class="line">    <span class="keyword">if</span> ($count &lt;= <span class="number">1</span>) <span class="keyword">return</span> $arr;</span><br><span class="line">    $key = $arr[<span class="number">0</span>];</span><br><span class="line">    $left = [];</span><br><span class="line">    $right = [];</span><br><span class="line">    <span class="keyword">for</span> ($i=<span class="number">1</span>; $i&lt;$count; $i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> ($arr[$i] &gt; $key)&#123;</span><br><span class="line">            array_push($right, $arr[$i]);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            array_push($left, $arr[$i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    $left = quick_sort($left);</span><br><span class="line">    $right = quick_sort($right);</span><br><span class="line">    <span class="keyword">return</span> array_merge($left, [$key], $right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2018/02/04/joseph_ring/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wjh Time">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wjh blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/02/04/joseph_ring/" itemprop="url">约瑟夫环</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-04T00:00:00+08:00">
+                2018-02-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>猴子问题，n个猴子围成圈，每第m个踢掉，最后剩下哪个</p>
+<h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 因为不知道具体的循环次数，所以使用while循环</span><br><span class="line">2. 使用临时变量i来计数，循环中每次取出第一个值</span><br><span class="line">3. 判断i对m取余是否为0，如果为0，则证明该值应该去掉，否则将其重新添加到队尾</span><br></pre></td></tr></table></figure>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">joseph_ring</span><span class="params">($n, $m)</span></span>&#123;</span><br><span class="line">    $arr = range(<span class="number">1</span>, $n);</span><br><span class="line">    $i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (count($arr)&gt;<span class="number">1</span>)&#123;</span><br><span class="line">        $i ++:</span><br><span class="line">        $left = array_shift($arr);</span><br><span class="line">        <span class="keyword">if</span> ($i % $m != <span class="number">0</span>) &#123;</span><br><span class="line">            array_push($arr, $left);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $arr[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
           
         
       
@@ -1654,156 +1797,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2017/08/10/composer/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Wjh Time">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="wjh blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/08/10/composer/" itemprop="url">composer命令及其配置</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-10T00:00:00+08:00">
-                2017-08-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/php/" itemprop="url" rel="index">
-                    <span itemprop="name">php</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">查看所有配置项，一些看不懂的没有列出来</span><br><span class="line"></span><br><span class="line">composer config -l</span><br><span class="line"></span><br><span class="line">[repositories.packagist.org.type] composer</span><br><span class="line">//仓库地址</span><br><span class="line">[repositories.packagist.org.url] https://packagist.org</span><br><span class="line">[repositories.packagist.org.allow_ssl_downgrade] true</span><br><span class="line">...</span><br><span class="line">[github-protocols] [https, ssh]</span><br><span class="line">[vendor-dir] vendor (/Users/user/Sites/atom/packages/tuling/vendor)</span><br><span class="line">[bin-dir] &#123;$vendor-dir&#125;/bin (/Users/user/Sites/atom/packages/tuling/vendor/bin)</span><br><span class="line">[cache-dir] /Users/user/.composer/cache</span><br><span class="line">[data-dir] /Users/user/.composer</span><br><span class="line"></span><br><span class="line">//缓存地址</span><br><span class="line">[cache-files-dir] &#123;$cache-dir&#125;/files (/Users/user/.composer/cache/files)</span><br><span class="line">[cache-repo-dir] &#123;$cache-dir&#125;/repo (/Users/user/.composer/cache/repo)</span><br><span class="line">[cache-vcs-dir] &#123;$cache-dir&#125;/vcs (/Users/user/.composer/cache/vcs)</span><br><span class="line">[cache-ttl] 15552000</span><br><span class="line">[cache-files-ttl] 15552000</span><br><span class="line">[cache-files-maxsize] 300MiB (314572800)</span><br><span class="line">...</span><br><span class="line">//composer全局配置地址</span><br><span class="line">[home] /Users/user/.composer</span><br></pre></td></tr></table></figure>
-<h3 id="require包的版本号规则"><a href="#require包的版本号规则" class="headerlink" title="require包的版本号规则"></a>require包的版本号规则</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">常用版本号规则，确定版本号、版本号范围、版本号通配符，2、3、4是常用的版本号规则</span><br><span class="line">&gt;= 是范围符号，大于某个</span><br><span class="line"></span><br><span class="line">//指定确定版本号</span><br><span class="line">1. 1.0.2    </span><br><span class="line"></span><br><span class="line">//在某个版本号的范围之内，可以加逗号、或运算符，&gt;=1.0,&lt;2.0  &gt;=1.0|&lt;2.0  逗号表示and，两个范围之内的版本号，|表示或者</span><br><span class="line">2. &gt;=1.0    </span><br><span class="line"></span><br><span class="line">// *星号表示匹配任意值，例如：表示1.0.*下的任意版本，等效于&gt;=1.0,&lt;1.1</span><br><span class="line">3. 1.0.*    </span><br><span class="line"></span><br><span class="line">//~波浪号表示在某一个重要版本下的小版本升级</span><br><span class="line">例如：在1.2.2版本之上升级，但是不升级到1.3.0版本  1.2 &gt;= 版本号 &lt; 1.3.0</span><br><span class="line">避免高版本不兼容低版本</span><br><span class="line">4. ~1.2.2     </span><br><span class="line"></span><br><span class="line">//^和~类似， 1.2.3 &lt;= 版本号 &lt; 2.0.0</span><br><span class="line">//比~的范围更广，匹配下一个重要版本（官网上没有，但实际中经常见到）</span><br><span class="line">5. ^1.2.3</span><br></pre></td></tr></table></figure>
-<h3 id="composer-json示例文件"><a href="#composer-json示例文件" class="headerlink" title="composer.json示例文件"></a>composer.json示例文件</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">// composer.json配置文件</span><br><span class="line"></span><br><span class="line">"type": "library",  //默认为library</span><br><span class="line">"require": &#123;</span><br><span class="line">    //对php有版本限制</span><br><span class="line">    "php": "&gt;=5.6",</span><br><span class="line">    //要求php扩展，必须安装ext-mbstring</span><br><span class="line">    "ext-mbstring": "*",</span><br><span class="line">    //要求php库，必须安装lib-curl</span><br><span class="line">    "lib-curl": "*"</span><br><span class="line">&#125;,</span><br><span class="line">"require-dev": &#123;&#125;,</span><br><span class="line">"autoload": &#123;</span><br><span class="line">     "psr-4": &#123;</span><br><span class="line">         "App\\": "app/",</span><br><span class="line">          "Monolog\\": ["src/", "lib/"]</span><br><span class="line">     &#125;,</span><br><span class="line">     "psr-0": &#123;</span><br><span class="line">         "Monolog\\": ["src/", "lib/"] </span><br><span class="line">     &#125;,</span><br><span class="line">     "classmap": &#123;     //不遵循psr-0/4规范</span><br><span class="line">         <span class="string">"database"</span> </span><br><span class="line">     &#125;,</span><br><span class="line">     "files": &#123;     //作为函数库引入</span><br><span class="line">         [<span class="string">"url/to/your/helpers.php"</span>] </span><br><span class="line">     &#125;</span><br><span class="line">&#125;,</span><br><span class="line">"repositories": &#123;</span><br><span class="line">     "packagist": &#123;</span><br><span class="line">         "type": "composer",</span><br><span class="line">         "url": "https://packagist.phpcomposer.com"</span><br><span class="line">     &#125;</span><br><span class="line">&#125;,</span><br><span class="line">//最低版本要求，尽量不要安装dev-master版本的包，安装稳定版</span><br><span class="line">"minimum-stability": "stable"</span><br></pre></td></tr></table></figure>
-<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//查看软件包被哪些包依赖</span><br><span class="line">composer depends guzzlehttp/guzzle</span><br><span class="line"></span><br><span class="line">composer init</span><br><span class="line">composer require</span><br><span class="line">composer update</span><br><span class="line">composer install </span><br><span class="line">     —no-dev 跳过require-dev中列出的包</span><br><span class="line">     —dev 安装require-dev列出的包</span><br><span class="line">     </span><br><span class="line">//重建索引</span><br><span class="line">composer dump-autoload</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1849,7 +1847,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
