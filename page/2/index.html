@@ -303,6 +303,580 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2018/02/04/reverge_array/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wjh Time">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wjh blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/02/04/reverge_array/" itemprop="url">反转数组</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-04T00:00:00+08:00">
+                2018-02-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>反转数组，反转字符串均可，有两种思路</p>
+<h3 id="第一种"><a href="#第一种" class="headerlink" title="第一种"></a>第一种</h3><h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 使用for循环</span><br><span class="line">2. 循环到i/2处，将每个值和count-i进行交换</span><br><span class="line">3. 返回原数组</span><br></pre></td></tr></table></figure>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reverge_array</span><span class="params">($arr)</span></span>&#123;</span><br><span class="line">    $count = count($arr) - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> ($i=<span class="number">0</span>; $i&lt;=$count/<span class="number">2</span>; $i++)&#123;</span><br><span class="line">        $temp = $arr[$i];</span><br><span class="line">        $arr[$i] = $arr[$count-$i];</span><br><span class="line">        $arr[$count-$i] = $temp;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="第二种"><a href="#第二种" class="headerlink" title="第二种"></a>第二种</h3><h4 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 使用while循环</span><br><span class="line">2. 设置left和right，分别为第一个和数组最后一个的下标</span><br><span class="line">3. while判断right大于left，然后将arr[left]和arr[right]的值进行交换</span><br><span class="line">4. left++，right--</span><br></pre></td></tr></table></figure>
+<h4 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reverge_array</span><span class="params">($arr)</span></span>&#123;</span><br><span class="line">    $left = <span class="number">0</span>;</span><br><span class="line">    $right = count($arr)<span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">while</span> ($right &gt; $left)&#123;</span><br><span class="line">        $tmp = $arr[$left];</span><br><span class="line">        $arr[$left] = $arr[$right];</span><br><span class="line">        $arr[$right] = $tmp;</span><br><span class="line">        $right --;</span><br><span class="line">        $left ++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2018/02/04/shuffle_array/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wjh Time">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wjh blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/02/04/shuffle_array/" itemprop="url">打乱数组</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-04T00:00:00+08:00">
+                2018-02-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>相当于shuffle函数</p>
+<h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. for循环数组的每一个变量</span><br><span class="line">2. 使用随机数函数取出数组的另外一个随机值</span><br><span class="line">3. 将两者交换</span><br></pre></td></tr></table></figure>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shuffle_array</span><span class="params">($arr)</span> </span>&#123;</span><br><span class="line">    $count = count($arr) <span class="number">-1</span> ;</span><br><span class="line">    <span class="keyword">for</span> ($i=<span class="number">0</span>; $i&lt;=$count; $i++)&#123;</span><br><span class="line">        $key = mt_rand(<span class="number">0</span>, $count);</span><br><span class="line">        <span class="keyword">if</span> ($arr[$i] != $arr[$key])&#123;</span><br><span class="line">            $tmp = $arr[$key];</span><br><span class="line">            $arr[$key] = $arr[$i];</span><br><span class="line">            $arr[$i] = $tmp;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2018/02/04/joseph_ring/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wjh Time">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wjh blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/02/04/joseph_ring/" itemprop="url">约瑟夫环</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-04T00:00:00+08:00">
+                2018-02-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>猴子问题，n个猴子围成圈，每第m个踢掉，最后剩下哪个</p>
+<h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 因为不知道具体的循环次数，所以使用while循环</span><br><span class="line">2. 使用临时变量i来计数，循环中每次取出第一个值</span><br><span class="line">3. 判断i对m取余是否为0，如果为0，则证明该值应该去掉，否则将其重新添加到队尾</span><br></pre></td></tr></table></figure>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">joseph_ring</span><span class="params">($n, $m)</span></span>&#123;</span><br><span class="line">    $arr = range(<span class="number">1</span>, $n);</span><br><span class="line">    $i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (count($arr)&gt;<span class="number">1</span>)&#123;</span><br><span class="line">        $i ++:</span><br><span class="line">        $left = array_shift($arr);</span><br><span class="line">        <span class="keyword">if</span> ($i % $m != <span class="number">0</span>) &#123;</span><br><span class="line">            array_push($arr, $left);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $arr[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2018/02/04/prime_number/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wjh Time">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wjh blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/02/04/prime_number/" itemprop="url">计算质数</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-04T00:00:00+08:00">
+                2018-02-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>求n以内的质数</p>
+<h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">质数是指大于1的正数，只能被1和本身整除</span><br><span class="line">简洁方法：如果到n/2还没有查找到，则该数为质数</span><br><span class="line">1. 从2开始，循环小于n的所有数</span><br><span class="line">2. 嵌套循环，循环小于每个值的二分之一的数</span><br><span class="line">3. 外层对内层数取余，如果等于0，则不是质数，跳出循环</span><br><span class="line">4. 内层循环结束，判断值是否超过了i/2，如果是，加入到结果数组</span><br></pre></td></tr></table></figure>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">find_prime</span><span class="params">($n)</span> </span>&#123;</span><br><span class="line">    $result = [];</span><br><span class="line">    <span class="keyword">for</span> ($i=<span class="number">2</span>; $i&lt;=$n; $i++)&#123;</span><br><span class="line">        <span class="keyword">for</span> ($j=<span class="number">2</span>; $j&lt;=$i/<span class="number">2</span>; $j++)&#123;</span><br><span class="line">            <span class="keyword">if</span> ($i % $j == <span class="number">0</span>)&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> ($j &gt; $i/<span class="number">2</span>)&#123;</span><br><span class="line">            array_push($result, $i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2018/02/04/binary_search/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -589,294 +1163,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2018/02/04/shuffle_array/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Wjh Time">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="wjh blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/04/shuffle_array/" itemprop="url">打乱数组</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-04T00:00:00+08:00">
-                2018-02-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>相当于shuffle函数</p>
-<h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. for循环数组的每一个变量</span><br><span class="line">2. 使用随机数函数取出数组的另外一个随机值</span><br><span class="line">3. 将两者交换</span><br></pre></td></tr></table></figure>
-<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shuffle_array</span><span class="params">($arr)</span> </span>&#123;</span><br><span class="line">    $count = count($arr) <span class="number">-1</span> ;</span><br><span class="line">    <span class="keyword">for</span> ($i=<span class="number">0</span>; $i&lt;=$count; $i++)&#123;</span><br><span class="line">        $key = mt_rand(<span class="number">0</span>, $count);</span><br><span class="line">        <span class="keyword">if</span> ($arr[$i] != $arr[$key])&#123;</span><br><span class="line">            $tmp = $arr[$key];</span><br><span class="line">            $arr[$key] = $arr[$i];</span><br><span class="line">            $arr[$i] = $tmp;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2018/02/04/reverge_array/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Wjh Time">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="wjh blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/04/reverge_array/" itemprop="url">反转数组</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-04T00:00:00+08:00">
-                2018-02-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>反转数组，反转字符串均可，有两种思路</p>
-<h3 id="第一种"><a href="#第一种" class="headerlink" title="第一种"></a>第一种</h3><h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 使用for循环</span><br><span class="line">2. 循环到i/2处，将每个值和count-i进行交换</span><br><span class="line">3. 返回原数组</span><br></pre></td></tr></table></figure>
-<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reverge_array</span><span class="params">($arr)</span></span>&#123;</span><br><span class="line">    $count = count($arr) - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> ($i=<span class="number">0</span>; $i&lt;=$count/<span class="number">2</span>; $i++)&#123;</span><br><span class="line">        $temp = $arr[$i];</span><br><span class="line">        $arr[$i] = $arr[$count-$i];</span><br><span class="line">        $arr[$count-$i] = $temp;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="第二种"><a href="#第二种" class="headerlink" title="第二种"></a>第二种</h3><h4 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 使用while循环</span><br><span class="line">2. 设置left和right，分别为第一个和数组最后一个的下标</span><br><span class="line">3. while判断right大于left，然后将arr[left]和arr[right]的值进行交换</span><br><span class="line">4. left++，right--</span><br></pre></td></tr></table></figure>
-<h4 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reverge_array</span><span class="params">($arr)</span></span>&#123;</span><br><span class="line">    $left = <span class="number">0</span>;</span><br><span class="line">    $right = count($arr)<span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">while</span> ($right &gt; $left)&#123;</span><br><span class="line">        $tmp = $arr[$left];</span><br><span class="line">        $arr[$left] = $arr[$right];</span><br><span class="line">        $arr[$right] = $tmp;</span><br><span class="line">        $right --;</span><br><span class="line">        $left ++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2018/02/04/sort_algorithm/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -975,149 +1261,6 @@
 <h3 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h3><h4 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. 取数组第一个值为标准值</span><br><span class="line">2. 设置比标准值大的数组为right，比标准值小的数组为left</span><br><span class="line">3. for循环数组所有变量，如果比标准值大则放到right，反之，放到left</span><br><span class="line">4. 分别对left和right使用递归，最后分别赋值给left和right</span><br><span class="line">5. 返回合并数组，顺序是left, [key], right</span><br></pre></td></tr></table></figure>
 <h3 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">quick_sort</span><span class="params">($arr)</span> </span>&#123;</span><br><span class="line">    $count = count($arr);</span><br><span class="line">    <span class="keyword">if</span> ($count &lt;= <span class="number">1</span>) <span class="keyword">return</span> $arr;</span><br><span class="line">    $key = $arr[<span class="number">0</span>];</span><br><span class="line">    $left = [];</span><br><span class="line">    $right = [];</span><br><span class="line">    <span class="keyword">for</span> ($i=<span class="number">1</span>; $i&lt;$count; $i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> ($arr[$i] &gt; $key)&#123;</span><br><span class="line">            array_push($right, $arr[$i]);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            array_push($left, $arr[$i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    $left = quick_sort($left);</span><br><span class="line">    $right = quick_sort($right);</span><br><span class="line">    <span class="keyword">return</span> array_merge($left, [$key], $right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2018/02/04/joseph_ring/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Wjh Time">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="wjh blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/04/joseph_ring/" itemprop="url">约瑟夫环</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-04T00:00:00+08:00">
-                2018-02-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>猴子问题，n个猴子围成圈，每第m个踢掉，最后剩下哪个</p>
-<h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 因为不知道具体的循环次数，所以使用while循环</span><br><span class="line">2. 使用临时变量i来计数，循环中每次取出第一个值</span><br><span class="line">3. 判断i对m取余是否为0，如果为0，则证明该值应该去掉，否则将其重新添加到队尾</span><br></pre></td></tr></table></figure>
-<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">joseph_ring</span><span class="params">($n, $m)</span></span>&#123;</span><br><span class="line">    $arr = range(<span class="number">1</span>, $n);</span><br><span class="line">    $i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (count($arr)&gt;<span class="number">1</span>)&#123;</span><br><span class="line">        $i ++:</span><br><span class="line">        $left = array_shift($arr);</span><br><span class="line">        <span class="keyword">if</span> ($i % $m != <span class="number">0</span>) &#123;</span><br><span class="line">            array_push($arr, $left);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $arr[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
           
         
       
@@ -1634,169 +1777,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://wjhtime.github.io/2017/12/21/laravel_queue/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Wjh Time">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="wjh blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/21/laravel_queue/" itemprop="url">laravel队列源码分析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-21T00:00:00+08:00">
-                2017-12-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/laravel/" itemprop="url" rel="index">
-                    <span itemprop="name">laravel</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>php artisan queue:listen该命令通过php artisan queue:work来实现队列监听，源码中采用proc_open等相关函数实现多进程启动队列，每次启动均重启框架，所以性能上不是很高，占用的内存过大。但是在代码调试过程中可使用，每次更新队列文件的代码之后不需重新启动队列监听，即可实现队列文件的修改。</p>
-<h3 id="php-artisan-queue-listen"><a href="#php-artisan-queue-listen" class="headerlink" title="php artisan queue:listen"></a>php artisan queue:listen</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获取相关参数，之后调用queue Listener类，实现队列监听</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">fire</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;setListenerOptions();</span><br><span class="line"></span><br><span class="line">    $delay = <span class="keyword">$this</span>-&gt;input-&gt;getOption(<span class="string">'delay'</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// The memory limit is the amount of memory we will allow the script to occupy</span></span><br><span class="line">    <span class="comment">// before killing it and letting a process manager restart it for us, which</span></span><br><span class="line">    <span class="comment">// is to protect us against any memory leaks that will be in the scripts.</span></span><br><span class="line">    $memory = <span class="keyword">$this</span>-&gt;input-&gt;getOption(<span class="string">'memory'</span>);</span><br><span class="line"></span><br><span class="line">    $connection = <span class="keyword">$this</span>-&gt;input-&gt;getArgument(<span class="string">'connection'</span>);</span><br><span class="line"></span><br><span class="line">    $timeout = <span class="keyword">$this</span>-&gt;input-&gt;getOption(<span class="string">'timeout'</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// We need to get the right queue for the connection which is set in the queue</span></span><br><span class="line">    <span class="comment">// configuration file for the application. We will pull it based on the set</span></span><br><span class="line">    <span class="comment">// connection being run for the queue operation currently being executed.</span></span><br><span class="line">    $queue = <span class="keyword">$this</span>-&gt;getQueue($connection);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">$this</span>-&gt;listener-&gt;listen(</span><br><span class="line">        $connection, $queue, $delay, $memory, $timeout</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建进程，并通过无限循环调用进程</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">listen</span><span class="params">($connection, $queue, $delay, $memory, $timeout = <span class="number">60</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $process = <span class="keyword">$this</span>-&gt;makeProcess($connection, $queue, $delay, $memory, $timeout);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;runProcess($process, $memory);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//运行进程，回调函数表示可执行运行时输出，并且每次执行时验证是否超过内存限制</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">runProcess</span><span class="params">(Process $process, $memory)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $process-&gt;run(<span class="function"><span class="keyword">function</span> <span class="params">($type, $line)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;handleWorkerOutput($type, $line);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Once we have run the job we'll go check if the memory limit has been</span></span><br><span class="line">    <span class="comment">// exceeded for the script. If it has, we will kill this script so a</span></span><br><span class="line">    <span class="comment">// process manager will restart this with a clean slate of memory.</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;memoryExceeded($memory)) &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;stop();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//队列实际运行的过程</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">($callback = null)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;start($callback);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;wait();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="php-artisan-queue-work"><a href="#php-artisan-queue-work" class="headerlink" title="php artisan queue:work"></a>php artisan queue:work</h3><p>省略获取参数相关的代码</p>
-<h4 id="第一步：获取任务前的处理"><a href="#第一步：获取任务前的处理" class="headerlink" title="第一步：获取任务前的处理"></a>第一步：获取任务前的处理</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">如果有$daemon参数，则运行监听事件，否则只取出位于队首的元素执行</span><br><span class="line">WorkCommand.php</span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">runWorker</span><span class="params">($connection, $queue, $delay, $memory, $daemon = false)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;worker-&gt;setDaemonExceptionHandler(</span><br><span class="line">        <span class="keyword">$this</span>-&gt;laravel[<span class="string">'Illuminate\Contracts\Debug\ExceptionHandler'</span>]</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ($daemon) &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;worker-&gt;setCache(<span class="keyword">$this</span>-&gt;laravel[<span class="string">'cache'</span>]-&gt;driver());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;worker-&gt;daemon(</span><br><span class="line">            $connection, $queue, $delay, $memory,</span><br><span class="line">            <span class="keyword">$this</span>-&gt;option(<span class="string">'sleep'</span>), <span class="keyword">$this</span>-&gt;option(<span class="string">'tries'</span>)</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;worker-&gt;pop(</span><br><span class="line">        $connection, $queue, $delay,</span><br><span class="line">        <span class="keyword">$this</span>-&gt;option(<span class="string">'sleep'</span>), <span class="keyword">$this</span>-&gt;option(<span class="string">'tries'</span>)</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">workr pop方法的代码，取出下一个元素之后运行，完成之后调用sleep方法</span><br><span class="line">Work.php</span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">pop</span><span class="params">($connectionName, $queue = null, $delay = <span class="number">0</span>, $sleep = <span class="number">3</span>, $maxTries = <span class="number">0</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        $connection = <span class="keyword">$this</span>-&gt;manager-&gt;connection($connectionName);</span><br><span class="line"></span><br><span class="line">        $job = <span class="keyword">$this</span>-&gt;getNextJob($connection, $queue);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// If we're able to pull a job off of the stack, we will process it and</span></span><br><span class="line">        <span class="comment">// then immediately return back out. If there is no job on the queue</span></span><br><span class="line">        <span class="comment">// we will "sleep" the worker for the specified number of seconds.</span></span><br><span class="line">        <span class="keyword">if</span> (! is_null($job)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;process(</span><br><span class="line">                <span class="keyword">$this</span>-&gt;manager-&gt;getName($connectionName), $job, $maxTries, $delay</span><br><span class="line">            );</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (<span class="keyword">Exception</span> $e) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;exceptions) &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;exceptions-&gt;report($e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable $e) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;exceptions) &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;exceptions-&gt;report(<span class="keyword">new</span> FatalThrowableError($e));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">$this</span>-&gt;sleep($sleep);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> [<span class="string">'job'</span> =&gt; <span class="keyword">null</span>, <span class="string">'failed'</span> =&gt; <span class="keyword">false</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">队列容器采用redis时，$connection使用redis连接</span><br><span class="line">没有指定queue名称时，取默认的连接<span class="keyword">default</span></span><br><span class="line">如果指定队列名称，则用逗号分隔，按顺序取出所有数据</span><br><span class="line">Worker.php</span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">getNextJob</span><span class="params">($connection, $queue)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (is_null($queue)) &#123;</span><br><span class="line">        <span class="keyword">return</span> $connection-&gt;pop();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">foreach</span> (explode(<span class="string">','</span>, $queue) <span class="keyword">as</span> $queue) &#123;</span><br><span class="line">        <span class="keyword">if</span> (! is_null($job = $connection-&gt;pop($queue))) &#123;</span><br><span class="line">            <span class="keyword">return</span> $job;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">从redis中取出队列数据</span><br><span class="line"><span class="number">1.</span>首先将队列每次执行时检查所有的过期或执行中的任务，将其从有序集合中删除，同时重新推入到队列的末尾</span><br><span class="line"><span class="number">2.</span>再取出队列头部的数据，并从redis中删除，之后添加到名称为$queue:reserved的有序集合中，表示该条数据正在处理中，过期时间为当前时间+redis的过期时间</span><br><span class="line">(每次检查时比较当前时间和这条数据的分值来判断是否过期，如果大于该分值，则表示已经过期，会进行过期处理，重新调回<span class="number">1</span>步骤)</span><br><span class="line">RedisQueue.php</span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">pop</span><span class="params">($queue = null)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $original = $queue ?: <span class="keyword">$this</span>-&gt;default;</span><br><span class="line"></span><br><span class="line">    $queue = <span class="keyword">$this</span>-&gt;getQueue($queue);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (! is_null(<span class="keyword">$this</span>-&gt;expire)) &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;migrateAllExpiredJobs($queue);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $job = <span class="keyword">$this</span>-&gt;getConnection()-&gt;lpop($queue);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (! is_null($job)) &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;getConnection()-&gt;zadd($queue.<span class="string">':reserved'</span>, <span class="keyword">$this</span>-&gt;getTime() + <span class="keyword">$this</span>-&gt;expire, $job);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> RedisJob(<span class="keyword">$this</span>-&gt;container, <span class="keyword">$this</span>, $job, $original);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>处理异常数据<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">移除redis键为$queue:delayed和$queue:reserved名称的数据</span><br><span class="line">RedisQueue.php</span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">migrateAllExpiredJobs</span><span class="params">($queue)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;migrateExpiredJobs($queue.<span class="string">':delayed'</span>, $queue);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">$this</span>-&gt;migrateExpiredJobs($queue.<span class="string">':reserved'</span>, $queue);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">取出所有过期的任务，如果数量大于<span class="number">0</span>，则去掉，然后将任务推入到新的队列</span><br><span class="line"><span class="keyword">$this</span>-&gt;getConnection()为Predis\Client类，通过他启动事务，同时对redis的键为$queue:reserved进行监听，取出所有超时任务进行删除，并将这些任务推入到队列尾部</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">migrateExpiredJobs</span><span class="params">($from, $to)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $options = [<span class="string">'cas'</span> =&gt; <span class="keyword">true</span>, <span class="string">'watch'</span> =&gt; $from, <span class="string">'retry'</span> =&gt; <span class="number">10</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">$this</span>-&gt;getConnection()-&gt;transaction($options, <span class="function"><span class="keyword">function</span> <span class="params">($transaction)</span> <span class="title">use</span> <span class="params">($from, $to)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// First we need to get all of jobs that have expired based on the current time</span></span><br><span class="line">        <span class="comment">// so that we can push them onto the main queue. After we get them we simply</span></span><br><span class="line">        <span class="comment">// remove them from this "delay" queues. All of this within a transaction.</span></span><br><span class="line">        $jobs = <span class="keyword">$this</span>-&gt;getExpiredJobs(</span><br><span class="line">            $transaction, $from, $time = <span class="keyword">$this</span>-&gt;getTime()</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// If we actually found any jobs, we will remove them from the old queue and we</span></span><br><span class="line">        <span class="comment">// will insert them onto the new (ready) "queue". This means they will stand</span></span><br><span class="line">        <span class="comment">// ready to be processed by the queue worker whenever their turn comes up.</span></span><br><span class="line">        <span class="keyword">if</span> (count($jobs) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;removeExpiredJobs($transaction, $from, $time);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">$this</span>-&gt;pushExpiredJobsOntoNewQueue($transaction, $to, $jobs);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$from为队列的键，$time是当前时间，取出有序集合中分数最小值到分数为当前时间的所有数据</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">getExpiredJobs</span><span class="params">($transaction, $from, $time)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $transaction-&gt;zrangebyscore($from, <span class="string">'-inf'</span>, $time);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">removeExpiredJobs</span><span class="params">($transaction, $from, $time)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $transaction-&gt;multi();</span><br><span class="line"></span><br><span class="line">    $transaction-&gt;zremrangebyscore($from, <span class="string">'-inf'</span>, $time);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">pushExpiredJobsOntoNewQueue</span><span class="params">($transaction, $to, $jobs)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    call_user_func_array([$transaction, <span class="string">'rpush'</span>], array_merge([$to], $jobs));</span><br></pre></td></tr></table></figure></p>
-<h4 id="第二步：处理任务"><a href="#第二步：处理任务" class="headerlink" title="第二步：处理任务"></a>第二步：处理任务</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">回到取出队列数据后运行的代码</span><br><span class="line">先验证是否设置了最大尝试次数，如果任务记录的尝试次数大于最大尝试次数，则</span><br><span class="line">Work.php</span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">process</span><span class="params">($connection, Job $job, $maxTries = <span class="number">0</span>, $delay = <span class="number">0</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ($maxTries &gt; <span class="number">0</span> &amp;&amp; $job-&gt;attempts() &gt; $maxTries) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;logFailedJob($connection, $job);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// First we will fire off the job. Once it is done we will see if it will</span></span><br><span class="line">        <span class="comment">// be auto-deleted after processing and if so we will go ahead and run</span></span><br><span class="line">        <span class="comment">// the delete method on the job. Otherwise we will just keep moving.</span></span><br><span class="line">        $job-&gt;fire();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;raiseAfterJobEvent($connection, $job);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> [<span class="string">'job'</span> =&gt; $job, <span class="string">'failed'</span> =&gt; <span class="keyword">false</span>];</span><br><span class="line">    &#125; <span class="keyword">catch</span> (<span class="keyword">Exception</span> $e) &#123;</span><br><span class="line">        <span class="comment">// If we catch an exception, we will attempt to release the job back onto</span></span><br><span class="line">        <span class="comment">// the queue so it is not lost. This will let is be retried at a later</span></span><br><span class="line">        <span class="comment">// time by another listener (or the same one). We will do that here.</span></span><br><span class="line">        <span class="keyword">if</span> (! $job-&gt;isDeleted()) &#123;</span><br><span class="line">            $job-&gt;release($delay);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">throw</span> $e;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable $e) &#123;</span><br><span class="line">        <span class="keyword">if</span> (! $job-&gt;isDeleted()) &#123;</span><br><span class="line">            $job-&gt;release($delay);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">throw</span> $e;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>尝试次数过多处理</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">记录失败日志，如果设置了failer处理器，则失败日志</span><br><span class="line">Work.php</span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">logFailedJob</span><span class="params">($connection, Job $job)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;failer) &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;failer-&gt;log($connection, $job-&gt;getQueue(), $job-&gt;getRawBody());</span><br><span class="line"></span><br><span class="line">        $job-&gt;delete();</span><br><span class="line"></span><br><span class="line">        $job-&gt;failed();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;raiseFailedJobEvent($connection, $job);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> [<span class="string">'job'</span> =&gt; $job, <span class="string">'failed'</span> =&gt; <span class="keyword">true</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">插入当前时间的一条失败记录，payload为任务体，记录名称、连接等信息</span><br><span class="line">DatabaseFailedJobProvider.php</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">log</span><span class="params">($connection, $queue, $payload)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $failed_at = Carbon::now();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">$this</span>-&gt;getTable()-&gt;insert(compact(<span class="string">'connection'</span>, <span class="string">'queue'</span>, <span class="string">'payload'</span>, <span class="string">'failed_at'</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">RedisJob.php</span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">delete</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">parent</span>::delete();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">$this</span>-&gt;redis-&gt;deleteReserved(<span class="keyword">$this</span>-&gt;queue, <span class="keyword">$this</span>-&gt;job);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">由于上一步把每次处理的数据都从$queue中取出，放入$queue:reserved中，所以此处将该值从$queue:reserved中删除</span><br><span class="line">RedisQueue</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">deleteReserved</span><span class="params">($queue, $job)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;getConnection()-&gt;zrem(<span class="keyword">$this</span>-&gt;getQueue($queue).<span class="string">':reserved'</span>, $job);</span><br><span class="line">&#125;</span><br><span class="line">取出job，转换成对象CallQueuedHandler，调用failed方法，传入的值为任务的实体(也就是自己写的队列类)</span><br><span class="line">Job.php</span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">failed</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $payload = json_decode(<span class="keyword">$this</span>-&gt;getRawBody(), <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">list</span>($class, $method) = <span class="keyword">$this</span>-&gt;parseJob($payload[<span class="string">'job'</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">$this</span>-&gt;instance = <span class="keyword">$this</span>-&gt;resolve($class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (method_exists(<span class="keyword">$this</span>-&gt;instance, <span class="string">'failed'</span>)) &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;instance-&gt;failed(<span class="keyword">$this</span>-&gt;resolveQueueableEntities($payload[<span class="string">'data'</span>]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">调用任务类的failed方法</span><br><span class="line">CallQueuedHandler.php</span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">failed</span><span class="params">(array $data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $handler = <span class="keyword">$this</span>-&gt;dispatcher-&gt;resolveHandler($command = unserialize($data[<span class="string">'command'</span>]));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (method_exists($handler, <span class="string">'failed'</span>)) &#123;</span><br><span class="line">        call_user_func([$handler, <span class="string">'failed'</span>], $command);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>任务处理</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">队列数据例如：</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"job"</span>: <span class="string">"Illuminate\\Queue\\CallQueuedHandler@call"</span>,</span><br><span class="line">    <span class="string">"data"</span>: &#123;</span><br><span class="line">        <span class="string">"command"</span>: <span class="string">"O:24:\"App\\Commands\\TestCommand\":1:&#123;s:12:\"\u0000*\u0000requestNo\";i:18;&#125;"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"id"</span>: <span class="string">"P5nKwZs2LNSjOFBlVCPyvdK7jAAHCi3U"</span>,</span><br><span class="line">    <span class="string">"attempts"</span>: <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line">job为队列处理的程序，data为要处理的数据(自己写的队列文件)，attempts为处理次数，推入队列时即为<span class="number">1</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line">回到队列处理的process方法中，该方法调用fire()方法</span><br><span class="line">RedisJob.php</span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">fire</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;resolveAndFire(json_decode(<span class="keyword">$this</span>-&gt;getRawBody(), <span class="keyword">true</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">resolveAndFire</span><span class="params">(array $payload)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">list</span>($class, $method) = <span class="keyword">$this</span>-&gt;parseJob($payload[<span class="string">'job'</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">$this</span>-&gt;instance = <span class="keyword">$this</span>-&gt;resolve($class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">$this</span>-&gt;instance-&gt;&#123;$method&#125;(<span class="keyword">$this</span>, <span class="keyword">$this</span>-&gt;resolveQueueableEntities($payload[<span class="string">'data'</span>]));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">通过@分割类和方法，调用CallQueuedHandler的call方法处理队列</span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">parseJob</span><span class="params">($job)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $segments = explode(<span class="string">'@'</span>, $job);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> count($segments) &gt; <span class="number">1</span> ? $segments : [$segments[<span class="number">0</span>], <span class="string">'fire'</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">调用call方法，取出队列任务$command，调用Dispatch类的dispatchNow方法处理任务</span><br><span class="line">CallQueuedHandler.php</span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">call</span><span class="params">(Job $job, array $data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $command = <span class="keyword">$this</span>-&gt;setJobInstanceIfNecessary(</span><br><span class="line">        $job, unserialize($data[<span class="string">'command'</span>])</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">$this</span>-&gt;dispatcher-&gt;dispatchNow($command, <span class="function"><span class="keyword">function</span> <span class="params">($handler)</span> <span class="title">use</span> <span class="params">($job)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;setJobInstanceIfNecessary($job, $handler);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (! $job-&gt;isDeletedOrReleased()) &#123;</span><br><span class="line">        $job-&gt;delete();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">队列类继承了SelfHandling接口，可以直接执行handle方法，afterResolving匿名函数貌似没有执行</span><br><span class="line">Dispatch.php</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">dispatchNow</span><span class="params">($command, Closure $afterResolving = null)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;pipeline-&gt;send($command)-&gt;through(<span class="keyword">$this</span>-&gt;pipes)-&gt;then(<span class="function"><span class="keyword">function</span> <span class="params">($command)</span> <span class="title">use</span> <span class="params">($afterResolving)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> ($command <span class="keyword">instanceof</span> SelfHandling) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;container-&gt;call([$command, <span class="string">'handle'</span>]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        $handler = <span class="keyword">$this</span>-&gt;resolveHandler($command);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ($afterResolving) &#123;</span><br><span class="line">            call_user_func($afterResolving, $handler);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> call_user_func(</span><br><span class="line">            [$handler, <span class="keyword">$this</span>-&gt;getHandlerMethod($command)], $command</span><br><span class="line">        );</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line">进入Container类的call方法，执行getMethodDependencies方法获取类的所有依赖，然后通过call_user_func_array函数调用[$command, <span class="string">'handle'</span>]方法，参数为获取到的依赖对象</span><br><span class="line">Container.php</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">call</span><span class="params">($callback, array $parameters = [], $defaultMethod = null)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;isCallableWithAtSign($callback) || $defaultMethod) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;callClass($callback, $parameters, $defaultMethod);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $dependencies = <span class="keyword">$this</span>-&gt;getMethodDependencies($callback, $parameters);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> call_user_func_array($callback, $dependencies);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">通过反射获取匿名函数的所有依赖</span><br><span class="line">Container.php</span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">getMethodDependencies</span><span class="params">($callback, array $parameters = [])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $dependencies = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">$this</span>-&gt;getCallReflector($callback)-&gt;getParameters() <span class="keyword">as</span> $key =&gt; $parameter) &#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;addDependencyForCallParameter($parameter, $parameters, $dependencies);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> array_merge($dependencies, $parameters);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>执行完成后删除</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">回到$job-&gt;isDeletedOrReleased(),此处将队列任务删除</span><br><span class="line"></span><br><span class="line">RedisJob.php</span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">isDeletedOrReleased</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;isDeleted() || <span class="keyword">$this</span>-&gt;isReleased();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">RedisJob.php</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">delete</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">parent</span>::delete();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">$this</span>-&gt;redis-&gt;deleteReserved(<span class="keyword">$this</span>-&gt;queue, <span class="keyword">$this</span>-&gt;job);</span><br><span class="line">&#125;</span><br><span class="line">将任务从redis为$queue:reserved的列表中删除，此处队列正常处理即为完成</span><br><span class="line">RedisQueue.php</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">deleteReserved</span><span class="params">($queue, $job)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;getConnection()-&gt;zrem(<span class="keyword">$this</span>-&gt;getQueue($queue).<span class="string">':reserved'</span>, $job);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>触发处理后的事件illuminate.queue.after<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">激活illuminate.queue.after事件，参数为redis连接，任务，还有任务类</span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">raiseAfterJobEvent</span><span class="params">($connection, Job $job)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;events) &#123;</span><br><span class="line">        $data = json_decode($job-&gt;getRawBody(), <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">$this</span>-&gt;events-&gt;fire(<span class="string">'illuminate.queue.after'</span>, [$connection, $job, $data]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">在AppServiceProvider.php中注册illuminate.queue.after事件</span><br><span class="line">Queue::after(<span class="function"><span class="keyword">function</span> <span class="params">($connection, $job, $data)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 写日志</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<h4 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">首先看process方法的异常，抛出异常后执行$job-&gt;release($delay)方法，RedisJob::delete()方法为上面分析的删除方法，此处会把$queue:reserved的值删除。也就是说队列会把正在处理的任务放到delayed队列中。</span><br><span class="line">设置延迟时间为参数中的--delay参数，</span><br><span class="line">RedisJob.php</span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">release</span><span class="params">($delay = <span class="number">0</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">parent</span>::release($delay);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">$this</span>-&gt;delete();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">$this</span>-&gt;redis-&gt;release(<span class="keyword">$this</span>-&gt;queue, <span class="keyword">$this</span>-&gt;job, $delay, <span class="keyword">$this</span>-&gt;attempts() + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">设置当前任务的的attempts次数+<span class="number">1</span>，同时添加到$queue:delayed的队列中，超时时间为当前时间+延迟秒数</span><br><span class="line">RedisQueue.php</span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">release</span><span class="params">($queue, $payload, $delay, $attempts)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $payload = <span class="keyword">$this</span>-&gt;setMeta($payload, <span class="string">'attempts'</span>, $attempts);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">$this</span>-&gt;getConnection()-&gt;zadd(<span class="keyword">$this</span>-&gt;getQueue($queue).<span class="string">':delayed'</span>, <span class="keyword">$this</span>-&gt;getTime() + $delay, $payload);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">pop方法的异常处理，发送消息通知</span><br><span class="line"><span class="keyword">$this</span>-&gt;exceptions-&gt;report($e);</span><br></pre></td></tr></table></figure>
-<p>疑问点：<br>如果redis处理过程中down掉，存在reserved中数据不会清掉</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1847,7 +1827,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1858,7 +1838,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -1869,7 +1849,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

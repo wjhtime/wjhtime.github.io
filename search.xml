@@ -34,6 +34,17 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[nginx location配置]]></title>
+    <url>%2F2018%2F08%2F08%2Flocation_config%2F</url>
+    <content type="text"><![CDATA[location按照最大匹配规则进行匹配 1234= 精确匹配/ 通用匹配，任何请求都会匹配到~ 区分大小写的匹配~* 不区分大小写 例子： 1234location ~* ^/x/([a-zA-Z0-9_]+)/(.+)$ &#123; proxy_pass http://$1.dns.alibaba.com/$2$is_args$args;&#125;]]></content>
+      <categories>
+        <category>nginx</category>
+      </categories>
+      <tags>
+        <tag>nginx</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[打印符合规则的数组的值]]></title>
     <url>%2F2018%2F07%2F29%2Fprint_array_value%2F</url>
     <content type="text"><![CDATA[遍历数组里的值，如果两数之和等于key，则打印这两个数，并且这两个值只能用一次 12345678910111213141516171819$arr = range(-100, 100);$key = 2;function check($arr, $key) &#123; $count = count($arr); for ($i=0; $i&lt;$count; $i++)&#123; for($j=$i+1; $j&lt;$count; $j++)&#123; if ($arr[$i] + $arr[$j] == $key) &#123; print $arr[$i]. ', '. $arr[$j]. "\n"; $arr[$i] = null; $arr[$j] = null; break; &#125; &#125; &#125;&#125;check($arr, $key); 本来用的unset删掉数组的键值，后来发现这种方法不清晰，只会给自己挖坑，所以，改用$arr[$i] = null的方式。]]></content>
@@ -97,6 +108,39 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[反转数组]]></title>
+    <url>%2F2018%2F02%2F04%2Freverge_array%2F</url>
+    <content type="text"><![CDATA[反转数组，反转字符串均可，有两种思路 第一种思路1231. 使用for循环2. 循环到i/2处，将每个值和count-i进行交换3. 返回原数组 实现123456789function reverge_array($arr)&#123; $count = count($arr) - 1; for ($i=0; $i&lt;=$count/2; $i++)&#123; $temp = $arr[$i]; $arr[$i] = $arr[$count-$i]; $arr[$count-$i] = $temp; &#125; return $arr;&#125; 第二种思路12341. 使用while循环2. 设置left和right，分别为第一个和数组最后一个的下标3. while判断right大于left，然后将arr[left]和arr[right]的值进行交换4. left++，right-- 实现123456789101112function reverge_array($arr)&#123; $left = 0; $right = count($arr)-1; while ($right &gt; $left)&#123; $tmp = $arr[$left]; $arr[$left] = $arr[$right]; $arr[$right] = $tmp; $right --; $left ++; &#125; return $arr;&#125;]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[打乱数组]]></title>
+    <url>%2F2018%2F02%2F04%2Fshuffle_array%2F</url>
+    <content type="text"><![CDATA[相当于shuffle函数 思路1231. for循环数组的每一个变量2. 使用随机数函数取出数组的另外一个随机值3. 将两者交换 实现123456789101112function shuffle_array($arr) &#123; $count = count($arr) -1 ; for ($i=0; $i&lt;=$count; $i++)&#123; $key = mt_rand(0, $count); if ($arr[$i] != $arr[$key])&#123; $tmp = $arr[$key]; $arr[$key] = $arr[$i]; $arr[$i] = $tmp; &#125; &#125; return $arr;&#125;]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[约瑟夫环]]></title>
+    <url>%2F2018%2F02%2F04%2Fjoseph_ring%2F</url>
+    <content type="text"><![CDATA[猴子问题，n个猴子围成圈，每第m个踢掉，最后剩下哪个 思路1231. 因为不知道具体的循环次数，所以使用while循环2. 使用临时变量i来计数，循环中每次取出第一个值3. 判断i对m取余是否为0，如果为0，则证明该值应该去掉，否则将其重新添加到队尾 实现123456789101112function joseph_ring($n, $m)&#123; $arr = range(1, $n); $i = 0; while (count($arr)&gt;1)&#123; $i ++: $left = array_shift($arr); if ($i % $m != 0) &#123; array_push($arr, $left); &#125; &#125; return $arr[0];&#125;]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[计算质数]]></title>
     <url>%2F2018%2F02%2F04%2Fprime_number%2F</url>
     <content type="text"><![CDATA[求n以内的质数 思路123456质数是指大于1的正数，只能被1和本身整除简洁方法：如果到n/2还没有查找到，则该数为质数1. 从2开始，循环小于n的所有数2. 嵌套循环，循环小于每个值的二分之一的数3. 外层对内层数取余，如果等于0，则不是质数，跳出循环4. 内层循环结束，判断值是否超过了i/2，如果是，加入到结果数组 实现1234567891011121314function find_prime($n) &#123; $result = []; for ($i=2; $i&lt;=$n; $i++)&#123; for ($j=2; $j&lt;=$i/2; $j++)&#123; if ($i % $j == 0)&#123; break; &#125; &#125; if ($j &gt; $i/2)&#123; array_push($result, $i); &#125; &#125; return $result;&#125;]]></content>
@@ -130,42 +174,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[打乱数组]]></title>
-    <url>%2F2018%2F02%2F04%2Fshuffle_array%2F</url>
-    <content type="text"><![CDATA[相当于shuffle函数 思路1231. for循环数组的每一个变量2. 使用随机数函数取出数组的另外一个随机值3. 将两者交换 实现123456789101112function shuffle_array($arr) &#123; $count = count($arr) -1 ; for ($i=0; $i&lt;=$count; $i++)&#123; $key = mt_rand(0, $count); if ($arr[$i] != $arr[$key])&#123; $tmp = $arr[$key]; $arr[$key] = $arr[$i]; $arr[$i] = $tmp; &#125; &#125; return $arr;&#125;]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[反转数组]]></title>
-    <url>%2F2018%2F02%2F04%2Freverge_array%2F</url>
-    <content type="text"><![CDATA[反转数组，反转字符串均可，有两种思路 第一种思路1231. 使用for循环2. 循环到i/2处，将每个值和count-i进行交换3. 返回原数组 实现123456789function reverge_array($arr)&#123; $count = count($arr) - 1; for ($i=0; $i&lt;=$count/2; $i++)&#123; $temp = $arr[$i]; $arr[$i] = $arr[$count-$i]; $arr[$count-$i] = $temp; &#125; return $arr;&#125; 第二种思路12341. 使用while循环2. 设置left和right，分别为第一个和数组最后一个的下标3. while判断right大于left，然后将arr[left]和arr[right]的值进行交换4. left++，right-- 实现123456789101112function reverge_array($arr)&#123; $left = 0; $right = count($arr)-1; while ($right &gt; $left)&#123; $tmp = $arr[$left]; $arr[$left] = $arr[$right]; $arr[$right] = $tmp; $right --; $left ++; &#125; return $arr;&#125;]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>算法</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[排序算法]]></title>
     <url>%2F2018%2F02%2F04%2Fsort_algorithm%2F</url>
     <content type="text"><![CDATA[冒泡排序思路1231. 设计算法复杂度为n方的嵌套循环2. i和j都从0开始，i&lt;count，j&lt;count-i-13. 比较arr[j]和arr[j+1]，如果arr[j]大于arr[j+1]，则交换顺序 实现12345678910111213function bubble_sort($arr) &#123; $count = count($arr); for ($i=0; $i&lt;$count; $i++) &#123; for ($j=0; $j&lt;$count-$i-1; $j++) &#123; if ($arr[$j] &gt; $arr[$j+1])&#123; $tmp = $arr[$j]; $arr[$j] = $arr[$j+1]; $arr[$j+1] = $tmp; &#125; &#125; &#125; return $arr;&#125; 快速排序思路123451. 取数组第一个值为标准值2. 设置比标准值大的数组为right，比标准值小的数组为left3. for循环数组所有变量，如果比标准值大则放到right，反之，放到left4. 分别对left和right使用递归，最后分别赋值给left和right5. 返回合并数组，顺序是left, [key], right 实现1234567891011121314151617function quick_sort($arr) &#123; $count = count($arr); if ($count &lt;= 1) return $arr; $key = $arr[0]; $left = []; $right = []; for ($i=1; $i&lt;$count; $i++) &#123; if ($arr[$i] &gt; $key)&#123; array_push($right, $arr[$i]); &#125;else &#123; array_push($left, $arr[$i]); &#125; &#125; $left = quick_sort($left); $right = quick_sort($right); return array_merge($left, [$key], $right);&#125;]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[约瑟夫环]]></title>
-    <url>%2F2018%2F02%2F04%2Fjoseph_ring%2F</url>
-    <content type="text"><![CDATA[猴子问题，n个猴子围成圈，每第m个踢掉，最后剩下哪个 思路1231. 因为不知道具体的循环次数，所以使用while循环2. 使用临时变量i来计数，循环中每次取出第一个值3. 判断i对m取余是否为0，如果为0，则证明该值应该去掉，否则将其重新添加到队尾 实现123456789101112function joseph_ring($n, $m)&#123; $arr = range(1, $n); $i = 0; while (count($arr)&gt;1)&#123; $i ++: $left = array_shift($arr); if ($i % $m != 0) &#123; array_push($arr, $left); &#125; &#125; return $arr[0];&#125;]]></content>
       <categories>
         <category>算法</category>
       </categories>
